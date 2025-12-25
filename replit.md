@@ -29,6 +29,8 @@ The application uses environment variables for configuration:
 - `DATABASE_URL` - PostgreSQL connection string (automatically configured)
 - `APP_KEY` - Laravel encryption key (configured)
 - `DB_CONNECTION` - Set to 'pgsql'
+- `PLISIO_SECRET_KEY` - Plisio API secret key for payment processing
+- `PLISIO_CALLBACK_URL` - Webhook URL for Plisio payment notifications (set to your domain + `/api/webhooks/plisio`)
 
 ## Development Setup
 - Server runs on port 5000
@@ -44,7 +46,19 @@ php artisan serve --host=0.0.0.0 --port=5000
 ## Database Migrations
 All migrations have been run and are PostgreSQL compatible. The project was originally designed for MySQL but migrations have been adapted for PostgreSQL.
 
+## Payment Gateway
+The application uses Plisio for cryptocurrency payment processing:
+- **Configuration**: `config/payment.php`
+- **Service**: `app/Services/PaymentGatewayService.php`
+- **Webhook**: `POST /api/webhooks/plisio` - handles payment confirmations
+- **Supported currencies**: BTC, ETH, LTC, DOGE, TRX, BNB, USDT (TRC20/ERC20/BEP20), and more
+
 ## Recent Changes
+- **2025-12-25**: Replaced Coinments with Plisio payment gateway
+  - Updated PaymentGatewayService for Plisio API
+  - Implemented secure webhook handler with signature verification
+  - Added database row locking for transaction safety
+  - Uses POST requests with Api-Key header for API calls
 - **2025-12-25**: Initial Replit setup
   - Configured PostgreSQL database connection
   - Fixed migrations for PostgreSQL compatibility (enum type handling)
