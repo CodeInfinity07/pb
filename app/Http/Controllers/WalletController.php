@@ -229,11 +229,210 @@ class WalletController extends Controller
     }
 
     /**
-     * Handle Coinments webhook
+     * Handle Plisio webhook callbacks
+     */
+    public function handlePlisioWebhook(Request $request)
+    {
+        Log::info('=== PLISIO WEBHOOK RECEIVED ===', [
+            'timestamp' => now()->toISOString(),
+            'method' => $request->method(),
+            'url' => $request->fullUrl(),
+            'ip' => $request->ip(),
+            'query_params' => $request->query(),
+            'form_data' => $request->all(),
+            'raw_content' => $request->getContent()
+        ]);
+
+        try {
+            $data = $request->all();
+
+            if (empty($data)) {
+                $data = json_decode($request->getContent(), true) ?? [];
+            }
+
+            if (empty($data['order_number']) && empty($data['txn_id'])) {
+                Log::warning('Plisio webhook missing required fields', ['data' => $data]);
+                return response()->json(['status' => 'error', 'message' => 'Missing required fields'], 400);
+            }
+
+            $status = $data['status'] ?? '';
+            $orderId = $data['order_number'] ?? '';
+            $txnId = $data['txn_id'] ?? '';
+            $amount = floatval($data['source_amount'] ?? $data['amount'] ?? 0);
+            $cryptoAmount = $data['amount'] ?? null;
+            $currency = $data['currency'] ?? $data['psys_cid'] ?? '';
+            $confirmations = intval($data['confirmations'] ?? 0);
+
+            Log::info('Plisio webhook parsed', [
+                'status' => $status,
+                'order_id' => $orderId,
+                'txn_id' => $txnId,
+                'amount' => $amount,
+                'currency' => $currency,
+                'confirmations' => $confirmations
+            ]);
+
+            if ($status === 'completed' || $status === 'mismatch') {
+                $result = $this->confirmPlisioDeposit(
+                    $orderId,
+                    $amount,
+                    $currency,
+                    $txnId,
+                    json_encode($data),
+                    $confirmations
+                );
+
+                if ($result) {
+                    Log::info('=== PLISIO DEPOSIT CONFIRMED ===', ['order_id' => $orderId, 'txn_id' => $txnId]);
+                    return response()->json(['status' => 'success']);
+                } else {
+                    Log::error('=== PLISIO DEPOSIT FAILED ===', ['order_id' => $orderId]);
+                    return response()->json(['status' => 'error', 'message' => 'Deposit confirmation failed'], 500);
+                }
+            }
+
+            if (in_array($status, ['pending', 'new'])) {
+                Log::info('Plisio payment pending', ['order_id' => $orderId, 'status' => $status]);
+                return response()->json(['status' => 'success', 'message' => 'Payment pending']);
+            }
+
+            if (in_array($status, ['cancelled', 'expired', 'error'])) {
+                $this->cancelPendingTransaction($orderId);
+                Log::info('Plisio payment cancelled/expired', ['order_id' => $orderId, 'status' => $status]);
+                return response()->json(['status' => 'success', 'message' => 'Payment cancelled']);
+            }
+
+            Log::info('Plisio webhook status acknowledged', ['status' => $status, 'order_id' => $orderId]);
+            return response()->json(['status' => 'success']);
+
+        } catch (Exception $e) {
+            Log::error('=== PLISIO WEBHOOK ERROR ===', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'data' => $request->all()
+            ]);
+            return response()->json(['status' => 'error', 'message' => 'Internal error'], 500);
+        }
+    }
+
+    /**
+     * Confirm Plisio deposit and credit user wallet
+     */
+    private function confirmPlisioDeposit(string $orderId, float $amount, string $currency, string $txnId, string $rawData, int $confirmations): bool
+    {
+        try {
+            return DB::transaction(function () use ($orderId, $amount, $currency, $txnId, $rawData, $confirmations) {
+                $orderParts = explode('_', $orderId);
+
+                if (count($orderParts) !== 3) {
+                    Log::error('Invalid Plisio order ID format', ['order_id' => $orderId]);
+                    return false;
+                }
+
+                $shortCode = $orderParts[0];
+                $userId = $orderParts[1];
+
+                $walletCurrency = $this->getFullCurrencyFromShortCode($shortCode);
+                if (!$walletCurrency) {
+                    Log::error('Unknown currency short code', ['short_code' => $shortCode]);
+                    return false;
+                }
+
+                $wallet = CryptoWallet::where('user_id', $userId)
+                    ->where('currency', $walletCurrency)
+                    ->first();
+
+                if (!$wallet) {
+                    Log::error('Wallet not found for Plisio deposit', ['user_id' => $userId, 'currency' => $walletCurrency]);
+                    return false;
+                }
+
+                $existingByTxid = Transaction::where('crypto_txid', $txnId)
+                    ->where('status', Transaction::STATUS_COMPLETED)
+                    ->first();
+
+                if ($existingByTxid) {
+                    Log::warning('Plisio transaction already processed', ['txn_id' => $txnId]);
+                    return true;
+                }
+
+                $transaction = Transaction::where('transaction_id', $orderId)
+                    ->where('status', Transaction::STATUS_PENDING)
+                    ->first();
+
+                if (!$transaction) {
+                    $completedTransaction = Transaction::where('transaction_id', $orderId)
+                        ->where('status', Transaction::STATUS_COMPLETED)
+                        ->first();
+
+                    if ($completedTransaction) {
+                        return true;
+                    }
+
+                    $transaction = Transaction::create([
+                        'user_id' => $userId,
+                        'transaction_id' => $orderId,
+                        'type' => Transaction::TYPE_DEPOSIT,
+                        'amount' => $amount,
+                        'currency' => $walletCurrency,
+                        'status' => Transaction::STATUS_PENDING,
+                        'payment_method' => 'plisio',
+                        'description' => "Crypto deposit - {$walletCurrency} via Plisio Gateway",
+                        'metadata' => ['wallet_id' => $wallet->id, 'gateway' => 'plisio', 'created_via' => 'webhook']
+                    ]);
+                }
+
+                $oldBalance = $wallet->balance;
+                $wallet->increment('balance', $amount);
+                $newBalance = $wallet->fresh()->balance;
+
+                $transaction->update([
+                    'status' => Transaction::STATUS_COMPLETED,
+                    'crypto_txid' => $txnId,
+                    'processed_at' => now(),
+                    'metadata' => array_merge($transaction->metadata ?? [], [
+                        'webhook_data' => json_decode($rawData, true),
+                        'confirmations' => $confirmations,
+                        'old_balance' => $oldBalance,
+                        'new_balance' => $newBalance,
+                        'gateway' => 'plisio'
+                    ]),
+                ]);
+
+                Log::info('=== PLISIO DEPOSIT PROCESSED ===', [
+                    'order_id' => $orderId,
+                    'user_id' => $userId,
+                    'amount' => $amount,
+                    'old_balance' => $oldBalance,
+                    'new_balance' => $newBalance
+                ]);
+
+                return true;
+            });
+        } catch (Exception $e) {
+            Log::error('Plisio deposit confirmation error', ['error' => $e->getMessage(), 'order_id' => $orderId]);
+            return false;
+        }
+    }
+
+    /**
+     * Cancel pending transaction
+     */
+    private function cancelPendingTransaction(string $orderId): void
+    {
+        Transaction::where('transaction_id', $orderId)
+            ->where('status', Transaction::STATUS_PENDING)
+            ->update([
+                'status' => Transaction::STATUS_FAILED,
+                'processed_at' => now()
+            ]);
+    }
+
+    /**
+     * Handle Coinments webhook (legacy - kept for backward compatibility)
      */
     public function handleCoinmentsWebhook(Request $request)
     {
-        // 🔥 LOG EVERYTHING FIRST - Before any processing
         Log::info('=== COINMENTS WEBHOOK RECEIVED ===', [
             'timestamp' => now()->toISOString(),
             'method' => $request->method(),
@@ -1437,13 +1636,14 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'currency' => $wallet->currency,
                 'status' => Transaction::STATUS_PENDING,
-                'payment_method' => 'coinments',
+                'payment_method' => 'plisio',
                 'crypto_address' => $paymentData['address'] ?? null,
-                'description' => "Pending crypto deposit - {$wallet->currency} via Coinments Gateway",
+                'description' => "Pending crypto deposit - {$wallet->currency} via Plisio Gateway",
                 'metadata' => [
                     'payment_data' => $paymentData,
                     'wallet_id' => $wallet->id,
-                    'gateway' => 'coinments',
+                    'gateway' => 'plisio',
+                    'txn_id' => $paymentData['txn_id'] ?? null,
                     'generated_at' => now()->toISOString()
                 ],
                 'processed_at' => null // Will be set when confirmed

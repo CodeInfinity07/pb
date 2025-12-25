@@ -11,60 +11,87 @@ class PaymentGatewayService
 {
     protected $secretKey;
     protected $apiUrl;
-    protected $testnet;
+    protected $callbackUrl;
     protected $timeout;
 
     public function __construct()
     {
-        $this->secretKey = config('payment.coinments.secret_key');
-        $this->apiUrl = config('payment.coinments.api_url');
-        $this->testnet = config('payment.coinments.testnet');
-        $this->timeout = config('payment.coinments.timeout');
+        $this->secretKey = config('payment.plisio.secret_key');
+        $this->apiUrl = config('payment.plisio.api_url');
+        $this->callbackUrl = config('payment.plisio.callback_url');
+        $this->timeout = config('payment.plisio.timeout');
         
         if (empty($this->secretKey)) {
-            throw new Exception('Payment gateway secret key not configured');
+            throw new Exception('Plisio secret key not configured');
         }
     }
 
     /**
-     * Generate payment for Coinments gateway
+     * Generate payment invoice for Plisio gateway
      *
-     * @param string $currency
-     * @param float $amount
-     * @param string $orderId
-     * @param array $package
-     * @param array $userInfo
+     * @param string $currency Cryptocurrency code (BTC, ETH, USDT, etc.)
+     * @param float $amount Amount in USD
+     * @param string $orderId Unique order identifier
+     * @param array $package Package/product information
+     * @param array $userInfo User information
      * @return array
      * @throws Exception
      */
-    public function generateCoinmentsPayment(string $currency, float $amount, string $orderId, array $package, array $userInfo): array
+    public function generatePlisioPayment(string $currency, float $amount, string $orderId, array $package, array $userInfo): array
     {
-        // Validate inputs
         $this->validatePaymentParams($currency, $amount, $orderId, $package, $userInfo);
 
         try {
-            // Convert currency amount
-            $convertedAmount = $this->convertCurrency($amount, $currency);
-            
-            // Build payload
-            $payload = $this->buildPaymentPayload($orderId, $package, $userInfo, $convertedAmount, $currency);
-            
-            // Make API call
-            $response = $this->makePaymentApiCall($payload);
-            
-            // Process and return response
-            return $this->formatPaymentResponse($response, $convertedAmount);
-            
+            $params = [
+                'source_currency' => 'USD',
+                'source_amount' => $amount,
+                'currency' => $this->mapCurrencyToPlisio($currency),
+                'order_number' => $orderId,
+                'order_name' => $package['name'] ?? "Deposit - {$orderId}",
+                'email' => $userInfo['email'] ?? '',
+                'api_key' => $this->secretKey,
+            ];
+
+            if ($this->callbackUrl) {
+                $params['callback_url'] = $this->callbackUrl . '?json=true';
+            }
+
+            Log::info('Making Plisio invoice request', [
+                'url' => "{$this->apiUrl}/invoices/new",
+                'params' => array_merge($params, ['api_key' => substr($this->secretKey, 0, 10) . '...'])
+            ]);
+
+            $response = Http::timeout($this->timeout)
+                ->get("{$this->apiUrl}/invoices/new", $params);
+
+            Log::info('Plisio API Response', [
+                'status_code' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            if (!$response->successful()) {
+                throw new RequestException($response);
+            }
+
+            $data = $response->json();
+
+            if (!isset($data['status']) || $data['status'] !== 'success') {
+                $errorMessage = $data['data']['message'] ?? $data['message'] ?? 'Unknown error from Plisio';
+                throw new Exception("Plisio payment failed: {$errorMessage}");
+            }
+
+            return $this->formatPaymentResponse($data['data'], $amount);
+
         } catch (RequestException $e) {
-            Log::error('Payment API request failed', [
+            Log::error('Plisio API request failed', [
                 'order_id' => $orderId,
                 'error' => $e->getMessage(),
                 'response' => $e->response?->body()
             ]);
             throw new Exception('Payment gateway is currently unavailable. Please try again later.');
-            
+
         } catch (Exception $e) {
-            Log::error('Payment generation failed', [
+            Log::error('Plisio payment generation failed', [
                 'order_id' => $orderId,
                 'error' => $e->getMessage()
             ]);
@@ -73,58 +100,142 @@ class PaymentGatewayService
     }
 
     /**
-     * Process withdrawal through YCPay gateway
+     * Process withdrawal through Plisio gateway
      *
-     * @param string $address
-     * @param float $amount
-     * @param string $orderId
-     * @param string $currency
-     * @param array $userInfo
+     * @param string $address Recipient wallet address
+     * @param float $amount Amount in crypto
+     * @param string $orderId Unique order identifier
+     * @param string $currency Cryptocurrency code
+     * @param array $userInfo User information
      * @return array
      * @throws Exception
      */
     public function processWithdrawal(string $address, float $amount, string $orderId, string $currency, array $userInfo): array
     {
-        // Validate withdrawal parameters
         $this->validateWithdrawalParams($address, $amount, $orderId, $currency);
 
         try {
-            // Convert currency amount
-            $convertedAmount = $this->convertCurrency($amount, $currency);
-            $formattedAmount = number_format($convertedAmount, 8, '.', '');
-            
-            // Build withdrawal payload
-            $payload = $this->buildWithdrawalPayload($address, $formattedAmount, $orderId, $currency, $userInfo);
-            
-            Log::info('Processing withdrawal request', [
+            $formattedAmount = number_format($amount, 8, '.', '');
+            $plisioCurrency = $this->mapCurrencyToPlisio($currency);
+
+            $params = [
+                'psys_cid' => $plisioCurrency,
+                'to' => $address,
+                'amount' => $formattedAmount,
+                'type' => 'cash_out',
+                'api_key' => $this->secretKey,
+            ];
+
+            Log::info('Processing Plisio withdrawal request', [
                 'order_id' => $orderId,
-                'currency' => $currency,
+                'currency' => $plisioCurrency,
                 'amount' => $formattedAmount,
                 'to_address' => $address,
                 'user_id' => $userInfo['user_id'] ?? 'unknown'
             ]);
-            
-            // Make withdrawal API call
-            $response = $this->makeWithdrawalApiCall($payload);
-            
-            // Process and return response
-            return $this->formatWithdrawalResponse($response, $convertedAmount);
-            
+
+            $response = Http::timeout($this->timeout)
+                ->get("{$this->apiUrl}/operations/withdraw", $params);
+
+            Log::info('Plisio Withdrawal API Response', [
+                'status_code' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            if (!$response->successful()) {
+                throw new RequestException($response);
+            }
+
+            $data = $response->json();
+
+            if (!isset($data['status']) || $data['status'] !== 'success') {
+                $errorMessage = $data['data']['message'] ?? $data['message'] ?? 'Withdrawal failed';
+                throw new Exception("Plisio withdrawal failed: {$errorMessage}");
+            }
+
+            return $this->formatWithdrawalResponse($data['data'], $amount);
+
         } catch (RequestException $e) {
-            Log::error('Withdrawal API request failed', [
+            Log::error('Plisio withdrawal API request failed', [
                 'order_id' => $orderId,
                 'error' => $e->getMessage(),
                 'response' => $e->response?->body()
             ]);
             throw new Exception('Withdrawal gateway is currently unavailable. Please try again later.');
-            
+
         } catch (Exception $e) {
-            Log::error('Withdrawal processing failed', [
+            Log::error('Plisio withdrawal processing failed', [
                 'order_id' => $orderId,
                 'error' => $e->getMessage()
             ]);
             throw $e;
         }
+    }
+
+    /**
+     * Get cryptocurrency balance from Plisio
+     *
+     * @param string $currency Cryptocurrency code
+     * @return array
+     */
+    public function getBalance(string $currency): array
+    {
+        try {
+            $plisioCurrency = $this->mapCurrencyToPlisio($currency);
+
+            $response = Http::timeout($this->timeout)
+                ->get("{$this->apiUrl}/balances/{$plisioCurrency}", [
+                    'api_key' => $this->secretKey
+                ]);
+
+            if (!$response->successful()) {
+                throw new Exception('Failed to get balance');
+            }
+
+            $data = $response->json();
+
+            if ($data['status'] === 'success') {
+                return [
+                    'balance' => $data['data']['balance'] ?? 0,
+                    'currency' => $currency
+                ];
+            }
+
+            throw new Exception($data['data']['message'] ?? 'Balance fetch failed');
+
+        } catch (Exception $e) {
+            Log::error('Plisio balance fetch failed', [
+                'currency' => $currency,
+                'error' => $e->getMessage()
+            ]);
+            return ['balance' => 0, 'currency' => $currency, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Map internal currency codes to Plisio currency codes
+     */
+    protected function mapCurrencyToPlisio(string $currency): string
+    {
+        $mapping = [
+            'USDT_TRC20' => 'USDT_TRX',
+            'USDT_ERC20' => 'USDT',
+            'USDT_BEP20' => 'USDT_BSC',
+            'BTC' => 'BTC',
+            'ETH' => 'ETH',
+            'LTC' => 'LTC',
+            'DOGE' => 'DOGE',
+            'TRX' => 'TRX',
+            'BNB' => 'BNB',
+            'XRP' => 'XRP',
+            'SOL' => 'SOL',
+            'MATIC' => 'MATIC',
+            'ADA' => 'ADA',
+            'DOT' => 'DOT',
+            'AVAX' => 'AVAX',
+        ];
+
+        return $mapping[$currency] ?? $currency;
     }
 
     /**
@@ -176,196 +287,26 @@ class PaymentGatewayService
     }
 
     /**
-     * Convert currency amount
-     */
-    protected function convertCurrency(float $amount, string $currency): float
-    {
-        // Replace this with your currency conversion logic
-        // For now, assuming you have a helper function
-        if (function_exists('fromcurrency')) {
-            return fromcurrency($amount, $currency);
-        }
-        
-        // Fallback - you might want to integrate with a currency API
-        return $amount;
-    }
-
-    /**
-     * Build payment payload
-     */
-    protected function buildPaymentPayload(string $orderId, array $package, array $userInfo, float $amount, string $currency): array
-    {
-        return [
-            "order_id" => $orderId,
-            "order_memo" => "Invoice for {$package['name']} - Username: {$userInfo['username']}",
-            "amount" => $amount,
-            "symbol" => $currency,
-            "testnet" => $this->testnet
-        ];
-    }
-
-    /**
-     * Build withdrawal payload
-     */
-    protected function buildWithdrawalPayload(string $address, string $amount, string $orderId, string $currency, array $userInfo): array
-    {
-        $memo = "Withdraw # {$orderId}";
-        
-        return [
-            "memo" => $memo,
-            "amount" => $amount,
-            "order_id" => $orderId,
-            "symbol" => $currency,
-            "to_address" => $address,
-            "testnet" => $this->testnet
-        ];
-    }
-
-    /**
-     * Make API call to payment gateway
-     */
-    protected function makePaymentApiCall(array $payload): array
-    {
-        Log::info('Making API call to payment gateway', [
-            'url' => "{$this->apiUrl}/invoice",
-            'payload' => $payload,
-            'headers' => [
-                'x-api-key' => substr($this->secretKey, 0, 10) . '...' // Only show first 10 chars for security
-            ]
-        ]);
-
-        $response = Http::timeout($this->timeout)
-            ->withHeaders([
-                'x-api-key' => $this->secretKey,
-                'Content-Type' => 'application/json'
-            ])
-            ->post("{$this->apiUrl}/invoice", $payload);
-
-        Log::info('API Response received', [
-            'status_code' => $response->status(),
-            'headers' => $response->headers(),
-            'body' => $response->body(),
-            'successful' => $response->successful()
-        ]);
-
-        if (!$response->successful()) {
-            Log::error('API request failed', [
-                'status' => $response->status(),
-                'body' => $response->body()
-            ]);
-            throw new RequestException($response);
-        }
-
-        // Try to decode JSON
-        try {
-            $data = $response->json();
-            Log::info('JSON decoded successfully', ['data' => $data]);
-        } catch (\Exception $e) {
-            Log::error('Failed to decode JSON response', [
-                'error' => $e->getMessage(),
-                'raw_body' => $response->body()
-            ]);
-            throw new Exception('Invalid JSON response from payment gateway: ' . $response->body());
-        }
-
-        // Check if we have the expected structure
-        if (!isset($data['result'])) {
-            Log::error('Response missing result field', [
-                'response_keys' => array_keys($data),
-                'full_response' => $data
-            ]);
-            throw new Exception('Malformed response from payment gateway. Response: ' . json_encode($data));
-        }
-
-        if (!$data['result']) {
-            $errorMessage = $data['error'] ?? $data['message'] ?? 'Unknown error from payment gateway';
-            Log::error('Payment gateway returned error', [
-                'error' => $errorMessage,
-                'full_response' => $data
-            ]);
-            throw new Exception("Payment generation failed: {$errorMessage}");
-        }
-
-        return $data;
-    }
-
-    /**
-     * Make API call to withdrawal gateway
-     */
-    protected function makeWithdrawalApiCall(array $payload): array
-    {
-        Log::info('Making withdrawal API call', [
-            'url' => "{$this->apiUrl}/payment",
-            'payload' => $payload,
-            'headers' => [
-                'x-api-key' => substr($this->secretKey, 0, 10) . '...' // Only show first 10 chars for security
-            ]
-        ]);
-
-        $response = Http::timeout($this->timeout)
-            ->withHeaders([
-                'x-api-key' => $this->secretKey,
-                'Content-Type' => 'application/json'
-            ])
-            ->post("{$this->apiUrl}/payment", $payload);
-
-        Log::info('Withdrawal API Response received', [
-            'status_code' => $response->status(),
-            'headers' => $response->headers(),
-            'body' => $response->body(),
-            'successful' => $response->successful()
-        ]);
-
-        if (!$response->successful()) {
-            Log::error('Withdrawal API request failed', [
-                'status' => $response->status(),
-                'body' => $response->body()
-            ]);
-            throw new RequestException($response);
-        }
-
-        // Try to decode JSON
-        try {
-            $data = $response->json();
-            Log::info('Withdrawal JSON decoded successfully', ['data' => $data]);
-        } catch (\Exception $e) {
-            Log::error('Failed to decode withdrawal JSON response', [
-                'error' => $e->getMessage(),
-                'raw_body' => $response->body()
-            ]);
-            throw new Exception('Invalid JSON response from withdrawal gateway: ' . $response->body());
-        }
-
-        // Check for transaction ID in response
-        if (empty($data['txn_id'])) {
-            $errorMessage = $data['message'] ?? $data['error'] ?? 'Withdrawal failed - no transaction ID returned';
-            Log::error('Withdrawal gateway returned error', [
-                'error' => $errorMessage,
-                'full_response' => $data
-            ]);
-            throw new Exception("Withdrawal failed: {$errorMessage}");
-        }
-
-        return $data;
-    }
-
-    /**
      * Format payment response
      */
     protected function formatPaymentResponse(array $apiResponse, float $amount): array
     {
-        $response = ['amount' => $amount];
+        $response = [
+            'amount' => $amount,
+            'txn_id' => $apiResponse['txn_id'] ?? null,
+        ];
 
-        // Handle different response types
-        if (!empty($apiResponse['address'])) {
-            $response['address'] = $apiResponse['address'];
+        if (!empty($apiResponse['wallet_hash'])) {
+            $response['address'] = $apiResponse['wallet_hash'];
             $response['type'] = 'address';
-        } elseif (!empty($apiResponse['url'])) {
-            $response['form'] = $this->generatePaymentForm($apiResponse['url']);
-            $response['type'] = 'form';
-            $response['url'] = $apiResponse['url'];
-        } else {
-            throw new Exception('Invalid payment response format');
+            $response['crypto_amount'] = $apiResponse['amount'] ?? $apiResponse['pending_amount'] ?? null;
+            $response['qr_code'] = $apiResponse['qr_code'] ?? null;
+            $response['expire_utc'] = $apiResponse['expire_utc'] ?? null;
+        }
+
+        if (!empty($apiResponse['invoice_url'])) {
+            $response['invoice_url'] = $apiResponse['invoice_url'];
+            $response['type'] = $response['type'] ?? 'redirect';
         }
 
         return $response;
@@ -378,8 +319,8 @@ class PaymentGatewayService
     {
         return [
             'success' => true,
-            'txn_id' => $apiResponse['txn_id'],
-            'explorer_url' => $apiResponse['explorer_url'] ?? null,
+            'txn_id' => $apiResponse['txn_id'] ?? $apiResponse['id'] ?? null,
+            'status' => $apiResponse['status'] ?? 'pending',
             'amount' => $amount,
             'message' => 'Withdrawal processed successfully',
             'raw_response' => $apiResponse
@@ -387,15 +328,41 @@ class PaymentGatewayService
     }
 
     /**
-     * Generate HTML payment form
+     * Verify Plisio callback signature
+     *
+     * @param array $data Callback data
+     * @return bool
      */
-    protected function generatePaymentForm(string $url): string
+    public function verifyCallbackSignature(array $data): bool
     {
-        return sprintf(
-            '<form method="post" target="_blank" action="%s">
-                <input type="submit" name="m_process" value="Pay Now" class="btn btn-primary" />
-            </form>',
-            e($url) // Laravel's escape function for XSS protection
-        );
+        if (empty($data['verify_hash'])) {
+            Log::warning('No verify_hash in Plisio callback');
+            return false;
+        }
+
+        $receivedHash = $data['verify_hash'];
+        unset($data['verify_hash']);
+
+        ksort($data);
+        $dataString = http_build_query($data);
+        $calculatedHash = hash_hmac('sha1', $dataString, $this->secretKey);
+
+        $isValid = hash_equals($calculatedHash, $receivedHash);
+
+        Log::info('Plisio signature verification', [
+            'received_hash' => $receivedHash,
+            'calculated_hash' => $calculatedHash,
+            'is_valid' => $isValid
+        ]);
+
+        return $isValid;
+    }
+
+    /**
+     * Alias method for backward compatibility
+     */
+    public function generateCoinmentsPayment(string $currency, float $amount, string $orderId, array $package, array $userInfo): array
+    {
+        return $this->generatePlisioPayment($currency, $amount, $orderId, $package, $userInfo);
     }
 }

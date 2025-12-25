@@ -26,12 +26,12 @@ Route::post('/kyc/webhook', [KycController::class, 'webhook'])->name('kyc.webhoo
 Route::post('webhook/green-api', [GreenApiWebhookController::class, 'handleWebhook'])
     ->name('webhook.green-api');
 
-// NEW: Webhook route for payment callbacks (outside auth middleware for API access)
-Route::get('/webhooks/coinments', [WalletController::class, 'handleCoinmentsWebhook'])
-    ->name('webhooks.coinments.get');
+// Plisio payment webhook callbacks
+Route::get('/webhooks/plisio', [WalletController::class, 'handlePlisioWebhook'])
+    ->name('webhooks.plisio.get');
 
-Route::post('/webhooks/coinments', [WalletController::class, 'handleCoinmentsWebhook'])
-    ->name('webhooks.coinments.post');
+Route::post('/webhooks/plisio', [WalletController::class, 'handlePlisioWebhook'])
+    ->name('webhooks.plisio.post');
 
 
 Route::middleware(['auth:sanctum'])->prefix('v1/crm')->name('api.crm.')->group(function () {

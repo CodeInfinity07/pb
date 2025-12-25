@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'coinments' => [
-        'secret_key' => env('COINMENTS_SECRET_KEY'),
-        'api_url' => env('COINMENTS_API_URL', 'https://gateway.predictor.guru'),
-        'testnet' => env('COINMENTS_TESTNET', false),
-        'timeout' => env('COINMENTS_TIMEOUT', 30),
+    'plisio' => [
+        'secret_key' => env('PLISIO_SECRET_KEY'),
+        'api_url' => env('PLISIO_API_URL', 'https://api.plisio.net/api/v1'),
+        'callback_url' => env('PLISIO_CALLBACK_URL'),
+        'timeout' => env('PLISIO_TIMEOUT', 30),
     ],
 ];

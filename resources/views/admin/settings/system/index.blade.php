@@ -388,42 +388,34 @@
                             <div class="mb-5">
                                 <h5 class="text-primary border-bottom pb-2 mb-4">
                                     <iconify-icon icon="material-symbols:account-balance-wallet" class="me-2"></iconify-icon>
-                                    Coinments Payment Gateway
+                                    Plisio Payment Gateway
                                 </h5>
                                 
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="coinments_secret_key" class="form-label fw-semibold">Secret Key</label>
+                                        <label for="plisio_secret_key" class="form-label fw-semibold">Secret Key</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" id="coinments_secret_key" name="coinments_secret_key" 
+                                            <input type="password" class="form-control" id="plisio_secret_key" name="plisio_secret_key" 
                                                    value="{{ str_repeat('*', 40) }}" readonly>
-                                            <button class="btn btn-outline-secondary" type="button" onclick="showSecretKey('coinments_secret_key', '{{ config('services.coinments.secret_key') }}')">
+                                            <button class="btn btn-outline-secondary" type="button" onclick="showSecretKey('plisio_secret_key', '{{ config('payment.plisio.secret_key') }}')">
                                                 <iconify-icon icon="iconamoon:eye-duotone"></iconify-icon>
                                             </button>
                                         </div>
-                                        <div class="form-text">Status: {{ config('services.coinments.secret_key') ? 'Configured' : 'Not Set' }}</div>
+                                        <div class="form-text">Status: {{ config('payment.plisio.secret_key') ? 'Configured' : 'Not Set' }}</div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label for="coinments_api_url" class="form-label fw-semibold">API URL</label>
-                                        <input type="url" class="form-control" id="coinments_api_url" name="coinments_api_url" 
-                                               value="{{ config('services.coinments.api_url', 'https://gateway.predictor.guru') }}" readonly>
+                                        <label for="plisio_api_url" class="form-label fw-semibold">API URL</label>
+                                        <input type="url" class="form-control" id="plisio_api_url" name="plisio_api_url" 
+                                               value="{{ config('payment.plisio.api_url', 'https://api.plisio.net/api/v1') }}" readonly>
                                         <div class="form-text">Payment gateway endpoint</div>
                                     </div>
 
-                                    <div class="col-12">
-                                        <div class="card bg-light border-0">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="coinments_testnet" name="coinments_testnet" 
-                                                           {{ config('services.coinments.testnet', false) ? 'checked' : '' }}>
-                                                    <label class="form-check-label fw-semibold" for="coinments_testnet">
-                                                        Enable Testnet Mode
-                                                    </label>
-                                                    <div class="form-text">Use testnet for development and testing</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-12">
+                                        <label for="plisio_callback_url" class="form-label fw-semibold">Callback URL</label>
+                                        <input type="url" class="form-control" id="plisio_callback_url" name="plisio_callback_url" 
+                                               value="{{ config('payment.plisio.callback_url', url('/api/webhooks/plisio')) }}" readonly>
+                                        <div class="form-text">Set this URL in your Plisio dashboard for payment notifications</div>
                                     </div>
                                 </div>
                             </div>
