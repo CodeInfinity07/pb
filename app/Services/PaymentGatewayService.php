@@ -329,6 +329,7 @@ class PaymentGatewayService
 
     /**
      * Verify Plisio callback signature
+     * Supports both JSON format (json=true in callback URL) and PHP serialized format
      *
      * @param array $data Callback data
      * @return bool
@@ -341,21 +342,39 @@ class PaymentGatewayService
         }
 
         $receivedHash = $data['verify_hash'];
-        unset($data['verify_hash']);
+        $ordered = $data;
+        unset($ordered['verify_hash']);
 
-        ksort($data);
-        $dataString = http_build_query($data);
-        $calculatedHash = hash_hmac('sha1', $dataString, $this->secretKey);
+        $jsonString = json_encode($ordered);
+        $jsonHash = hash_hmac('sha1', $jsonString, $this->secretKey);
 
-        $isValid = hash_equals($calculatedHash, $receivedHash);
+        if (hash_equals($jsonHash, $receivedHash)) {
+            Log::info('Plisio signature verified (JSON format)');
+            return true;
+        }
 
-        Log::info('Plisio signature verification', [
+        ksort($ordered);
+        if (isset($ordered['expire_utc'])) {
+            $ordered['expire_utc'] = (string) $ordered['expire_utc'];
+        }
+        if (isset($ordered['tx_urls'])) {
+            $ordered['tx_urls'] = html_entity_decode($ordered['tx_urls']);
+        }
+        $serializedString = serialize($ordered);
+        $serializedHash = hash_hmac('sha1', $serializedString, $this->secretKey);
+
+        if (hash_equals($serializedHash, $receivedHash)) {
+            Log::info('Plisio signature verified (serialized format)');
+            return true;
+        }
+
+        Log::warning('Plisio signature verification failed', [
             'received_hash' => $receivedHash,
-            'calculated_hash' => $calculatedHash,
-            'is_valid' => $isValid
+            'json_hash' => $jsonHash,
+            'serialized_hash' => $serializedHash
         ]);
 
-        return $isValid;
+        return false;
     }
 
     /**
