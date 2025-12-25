@@ -61,11 +61,11 @@ return [
 
         'old_db' => [
         'driver' => 'mysql',
-        'host' => env('OLD_DB_HOST', '207.244.225.100'),
+        'host' => env('OLD_DB_HOST'),
         'port' => env('OLD_DB_PORT', '3306'),
-        'database' => env('OLD_DB_DATABASE', 'assitix_main'),
-        'username' => env('OLD_DB_USERNAME', 'assitix_user'),
-        'password' => env('OLD_DB_PASSWORD', 'THEDEEBEE@123!@#'),
+        'database' => env('OLD_DB_DATABASE'),
+        'username' => env('OLD_DB_USERNAME'),
+        'password' => env('OLD_DB_PASSWORD'),
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
         'prefix' => '',
