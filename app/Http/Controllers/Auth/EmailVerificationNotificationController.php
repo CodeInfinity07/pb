@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+
+class EmailVerificationNotificationController extends Controller
+{
+    /**
+     * Send a new email verification notification.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('status', 'verification-link-sent');
+    }
+
+    /**
+     * Check if user's email is verified (AJAX endpoint)
+     */
+    public function check(Request $request)
+    {
+        return response()->json([
+            'verified' => $request->user()->hasVerifiedEmail()
+        ]);
+    }
+}
+

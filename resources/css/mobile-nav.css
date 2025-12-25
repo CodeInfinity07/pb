@@ -1,0 +1,305 @@
+/* ========================================
+   SIMPLE MOBILE FOOTER NAVIGATION ONLY
+   NO INTERFERENCE WITH EXISTING SIDEBAR
+   ======================================== */
+
+/* ==========================================
+   MOBILE FOOTER NAVIGATION
+   ========================================== */
+
+   .mobile-footer-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    display: none;
+}
+
+/* Show only on mobile */
+@media (max-width: 767.98px) {
+    .mobile-footer-nav {
+        display: block;
+    }
+    
+    /* Add some bottom padding to body so content doesn't get hidden */
+    body {
+        padding-bottom: 70px;
+    }
+}
+
+/* Hide on desktop */
+@media (min-width: 768px) {
+    .mobile-footer-nav {
+        display: none !important;
+    }
+    
+    body {
+        padding-bottom: 0;
+    }
+}
+
+.footer-nav-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+.footer-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #6b7280;
+    padding: 8px 4px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    min-width: 60px;
+    flex: 1;
+    max-width: 80px;
+    position: relative;
+}
+
+.footer-nav-item:hover {
+    color: #3b82f6;
+    text-decoration: none;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.footer-nav-item.active {
+    color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.footer-nav-item:focus {
+    outline: none;
+    color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.footer-nav-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+}
+
+.footer-nav-text {
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* ==========================================
+   BADGE SUPPORT FOR FOOTER ITEMS
+   ========================================== */
+
+.footer-nav-item .badge {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    font-size: 8px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   DARK THEME SUPPORT
+   ========================================== */
+
+@media (prefers-color-scheme: dark) {
+    .mobile-footer-nav {
+        border-top-color: #888888;
+    }
+    
+    .footer-nav-item {
+        color: #9ca3af;
+    }
+    
+    .footer-nav-item:hover,
+    .footer-nav-item.active,
+    .footer-nav-item:focus {
+        color: #60a5fa;
+        background-color: rgba(96, 165, 250, 0.1);
+    }
+}
+
+/* Support for manual dark theme classes */
+[data-bs-theme="dark"] .mobile-footer-nav,
+.dark .mobile-footer-nav {
+    background: #1f2937;
+    border-top-color: #374151;
+}
+
+[data-bs-theme="dark"] .footer-nav-item,
+.dark .footer-nav-item {
+    color: #9ca3af;
+}
+
+[data-bs-theme="dark"] .footer-nav-item:hover,
+[data-bs-theme="dark"] .footer-nav-item.active,
+[data-bs-theme="dark"] .footer-nav-item:focus,
+.dark .footer-nav-item:hover,
+.dark .footer-nav-item.active,
+.dark .footer-nav-item:focus {
+    color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.1);
+}
+
+/* ==========================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================== */
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .footer-nav-text {
+        font-size: 10px;
+    }
+    
+    .footer-nav-icon {
+        font-size: 18px;
+    }
+    
+    .footer-nav-item {
+        padding: 6px 2px;
+        min-width: 50px;
+    }
+}
+
+/* Large phones */
+@media (min-width: 361px) and (max-width: 430px) {
+    .footer-nav-text {
+        font-size: 12px;
+    }
+    
+    .footer-nav-icon {
+        font-size: 22px;
+    }
+}
+
+/* Tablets in portrait */
+@media (min-width: 431px) and (max-width: 767px) {
+    .footer-nav-container {
+        padding: 0 20px;
+    }
+    
+    .footer-nav-item {
+        max-width: 100px;
+        padding: 10px 8px;
+    }
+    
+    .footer-nav-text {
+        font-size: 13px;
+    }
+    
+    .footer-nav-icon {
+        font-size: 24px;
+    }
+}
+
+/* ==========================================
+   ACCESSIBILITY IMPROVEMENTS
+   ========================================== */
+
+/* Focus indicators */
+.footer-nav-item:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .footer-nav-item {
+        transition: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .footer-nav-item {
+        border: 1px solid transparent;
+    }
+    
+    .footer-nav-item:hover,
+    .footer-nav-item.active {
+        border-color: currentColor;
+    }
+}
+
+/* ==========================================
+   SAFE AREA SUPPORT (iPhone notch, etc.)
+   ========================================== */
+
+.mobile-footer-nav {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+/* ==========================================
+   FORCE FIXED POSITIONING - TABLE FIXES
+   ========================================== */
+
+/* Ensure footer stays fixed regardless of content */
+@media (max-width: 767.98px) {
+    .mobile-footer-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        display: block !important;
+        width: 100vw !important;
+        margin: 0 !important;
+        transform: translateZ(0) !important; /* Force hardware acceleration */
+    }
+    
+    /* Prevent tables from affecting footer position */
+    .table-responsive {
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* Ensure page content has proper spacing */
+    /* .page-content,
+    .container,
+    .container-fluid,
+    .container-xxl {
+        padding-bottom: 100px !important;
+    } */
+    
+    /* Handle sticky/fixed table headers that might conflict */
+    .table thead th {
+        position: relative !important;
+        z-index: 1 !important;
+    }
+    
+    /* Override any Bootstrap modal z-index issues */
+    .modal {
+        z-index: 9990 !important;
+    }
+    
+    .modal-backdrop {
+        z-index: 9989 !important;
+    }
+}

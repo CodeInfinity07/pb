@@ -1,0 +1,1190 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use App\Models\UserProfile;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Storage;
+use App\Models\UserReferral;
+use App\Models\UserInvestment;
+use App\Models\InvestmentPlan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+class DashboardController extends Controller
+{
+    /**
+     * Display role-based dashboard.
+     */
+    public function index(Request $request): View
+    {
+        $user = Auth::user();
+
+        // Route to appropriate dashboard based on user role
+        return match($user->role) {
+            User::ROLE_ADMIN => $this->adminDashboard($user),
+            User::ROLE_SUPPORT => $this->supportDashboard($user),
+            User::ROLE_MODERATOR => $this->moderatorDashboard($user),
+            default => $this->userDashboard($user),
+        };
+    }
+
+    /**
+     * Admin Dashboard
+     */
+    private function adminDashboard(User $user): View
+    {
+        // Load necessary relationships for admin
+        $user->load(['profile']);
+
+        // Get admin-specific dashboard data
+        $adminData = $this->getAdminDashboardData();
+
+        return view('admin.dashboard.index', compact('user', 'adminData'));
+    }
+
+    /**
+     * Support Dashboard
+     */
+    private function supportDashboard(User $user): View
+    {
+        // Load necessary relationships for support
+        $user->load(['profile']);
+
+        // Get support-specific dashboard data
+        $supportData = $this->getSupportDashboardData();
+
+        return view('support.dashboard.index', compact('user', 'supportData'));
+    }
+
+    /**
+     * Moderator Dashboard
+     */
+    private function moderatorDashboard(User $user): View
+    {
+        // Load necessary relationships for moderator
+        $user->load(['profile']);
+
+        // Get moderator-specific dashboard data
+        $moderatorData = $this->getModeratorDashboardData();
+
+        return view('moderator.dashboard.index', compact('user', 'moderatorData'));
+    }
+
+    /**
+     * Regular User Dashboard (existing functionality)
+     */
+    private function userDashboard(User $user): View
+    {
+        // Load all necessary relationships (without crypto wallets - we'll query those directly)
+        $user->load([
+            'profile',
+            'transactions' => function($query) {
+                $query->latest()->limit(50); // Limit to recent transactions for performance
+            },
+            'directReferrals.profile'
+        ]);
+
+        // Get comprehensive dashboard data
+        $dashboardData = $this->getComprehensiveDashboardData($user);
+
+        return view('dashboards.index', compact('user', 'dashboardData'));
+    }
+
+    /**
+     * Get admin-specific dashboard data
+     */
+    private function getAdminDashboardData(): array
+    {
+        return [
+            // User Statistics
+            'total_users' => User::count(),
+            'active_users' => User::active()->count(),
+            'verified_users' => User::verified()->count(),
+            'kyc_verified_users' => User::kycVerified()->count(),
+            'new_users_today' => User::whereDate('created_at', today())->count(),
+            'new_users_this_week' => User::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'new_users_this_month' => User::whereMonth('created_at', now()->month)->count(),
+            
+            // Staff Statistics
+            'total_admins' => User::admins()->count(),
+            'total_support' => User::support()->count(),
+            'total_moderators' => User::moderators()->count(),
+            'total_staff' => User::staff()->count(),
+            
+            // Financial Statistics
+            'total_deposits' => Transaction::where('type', Transaction::TYPE_DEPOSIT)
+                ->where('status', Transaction::STATUS_COMPLETED)
+                ->sum('amount'),
+            'total_withdrawals' => Transaction::where('type', Transaction::TYPE_WITHDRAWAL)
+                ->where('status', Transaction::STATUS_COMPLETED)
+                ->sum('amount'),
+            'pending_deposits' => Transaction::where('type', Transaction::TYPE_DEPOSIT)
+                ->where('status', Transaction::STATUS_PENDING)
+                ->sum('amount'),
+            'pending_withdrawals' => Transaction::where('type', Transaction::TYPE_WITHDRAWAL)
+                ->whereIn('status', [Transaction::STATUS_PENDING, Transaction::STATUS_PROCESSING])
+                ->sum('amount'),
+            'total_commissions' => Transaction::where('type', Transaction::TYPE_COMMISSION)
+                ->where('status', Transaction::STATUS_COMPLETED)
+                ->sum('amount'),
+            'pending_commissions' => Transaction::where('type', Transaction::TYPE_COMMISSION)
+                ->where('status', Transaction::STATUS_PENDING)
+                ->sum('amount'),
+            
+            // Today's Statistics
+            'today_deposits' => Transaction::where('type', Transaction::TYPE_DEPOSIT)
+                ->where('status', Transaction::STATUS_COMPLETED)
+                ->whereDate('created_at', today())
+                ->sum('amount'),
+            'today_withdrawals' => Transaction::where('type', Transaction::TYPE_WITHDRAWAL)
+                ->where('status', Transaction::STATUS_COMPLETED)
+                ->whereDate('created_at', today())
+                ->sum('amount'),
+            'today_registrations' => User::whereDate('created_at', today())->count(),
+            
+            // System Statistics
+            'total_transactions' => Transaction::count(),
+            'failed_transactions' => Transaction::where('status', Transaction::STATUS_FAILED)->count(),
+            'total_referrals' => UserReferral::count(),
+            
+            // Recent Activity
+            'recent_users' => User::with('profile')->latest()->limit(10)->get(),
+            'recent_transactions' => Transaction::with('user')->latest()->limit(15)->get(),
+            'pending_kyc' => User::whereHas('profile', function($q) {
+                $q->where('kyc_status', 'pending');
+            })->count(),
+            
+            // Monthly Data for Charts
+            'monthly_registrations' => $this->getMonthlyRegistrations(),
+            'monthly_deposits' => $this->getMonthlyDeposits(),
+            'monthly_withdrawals' => $this->getMonthlyWithdrawals(),
+        ];
+    }
+
+    /**
+     * Get support-specific dashboard data
+     */
+    private function getSupportDashboardData(): array
+    {
+        return [
+            // Ticket Statistics (if you have a ticket system)
+            'open_tickets' => 0, // Add ticket model when implemented
+            'assigned_to_me' => 0,
+            'pending_tickets' => 0,
+            'resolved_today' => 0,
+            
+            // User Support Statistics
+            'users_needing_help' => User::where('status', 'blocked')->count(),
+            'pending_kyc_verifications' => User::whereHas('profile', function($q) {
+                $q->where('kyc_status', 'pending');
+            })->count(),
+            'rejected_kyc' => User::whereHas('profile', function($q) {
+                $q->where('kyc_status', 'rejected');
+            })->count(),
+            
+            // Transaction Support
+            'pending_deposit_reviews' => Transaction::where('type', Transaction::TYPE_DEPOSIT)
+                ->where('status', Transaction::STATUS_PENDING)
+                ->count(),
+            'pending_withdrawal_reviews' => Transaction::where('type', Transaction::TYPE_WITHDRAWAL)
+                ->where('status', Transaction::STATUS_PENDING)
+                ->count(),
+            'flagged_transactions' => Transaction::where('status', Transaction::STATUS_FAILED)->count(),
+            
+            // Communication Statistics
+            'unread_messages' => 0, // Add when message system is implemented
+            'active_chats' => 0,
+            
+            // Recent Activity
+            'recent_users' => User::with('profile')->latest()->limit(5)->get(),
+            'recent_kyc_submissions' => User::whereHas('profile', function($q) {
+                $q->where('kyc_status', 'pending');
+            })->with('profile')->latest()->limit(5)->get(),
+            'recent_transactions' => Transaction::with('user')
+                ->whereIn('status', [Transaction::STATUS_PENDING, Transaction::STATUS_PROCESSING])
+                ->latest()->limit(10)->get(),
+        ];
+    }
+
+    /**
+     * Get moderator-specific dashboard data
+     */
+    private function getModeratorDashboardData(): array
+    {
+        return [
+            // User Moderation Statistics
+            'total_users' => User::regularUsers()->count(),
+            'active_users' => User::regularUsers()->active()->count(),
+            'suspended_users' => User::regularUsers()->where('status', 'inactive')->count(),
+            'blocked_users' => User::regularUsers()->where('status', 'blocked')->count(),
+            'flagged_users' => 0, // Add flagged status when implemented
+            
+            // Activity Statistics
+            'users_registered_today' => User::regularUsers()->whereDate('created_at', today())->count(),
+            'users_registered_this_week' => User::regularUsers()
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->count(),
+            'users_last_login_today' => User::regularUsers()
+                ->whereDate('last_login_at', today())
+                ->count(),
+            
+            // Content Moderation (when implemented)
+            'reported_content' => 0,
+            'pending_reports' => 0,
+            'resolved_reports_today' => 0,
+            
+            // Financial Oversight
+            'suspicious_transactions' => Transaction::where('status', Transaction::STATUS_FAILED)
+                ->count(),
+            'large_withdrawals' => Transaction::where('type', Transaction::TYPE_WITHDRAWAL)
+                ->where('amount', '>', 10000)
+                ->whereIn('status', [Transaction::STATUS_PENDING, Transaction::STATUS_PROCESSING])
+                ->count(),
+            
+            // Recent Activity
+            'recent_registrations' => User::regularUsers()->with('profile')->latest()->limit(8)->get(),
+            'recent_activity' => Transaction::with('user')
+                ->whereHas('user', function($q) {
+                    $q->where('role', User::ROLE_USER);
+                })
+                ->latest()->limit(10)->get(),
+            'users_needing_attention' => User::regularUsers()
+                ->where('status', 'blocked')
+                ->orWhereHas('profile', function($q) {
+                    $q->where('kyc_status', 'rejected');
+                })
+                ->with('profile')->limit(5)->get(),
+        ];
+    }
+
+    /**
+     * Helper methods for admin statistics
+     */
+    private function getMonthlyRegistrations(): array
+    {
+        $months = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = [
+                'month' => $date->format('M Y'),
+                'count' => User::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->count()
+            ];
+        }
+        return $months;
+    }
+
+    private function getMonthlyDeposits(): array
+    {
+        $months = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = [
+                'month' => $date->format('M Y'),
+                'amount' => Transaction::where('type', Transaction::TYPE_DEPOSIT)
+                    ->where('status', Transaction::STATUS_COMPLETED)
+                    ->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('amount')
+            ];
+        }
+        return $months;
+    }
+
+    private function getMonthlyWithdrawals(): array
+    {
+        $months = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = [
+                'month' => $date->format('M Y'),
+                'amount' => Transaction::where('type', Transaction::TYPE_WITHDRAWAL)
+                    ->where('status', Transaction::STATUS_COMPLETED)
+                    ->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('amount')
+            ];
+        }
+        return $months;
+    }
+
+    /**
+     * Role-specific dashboard methods for additional functionality
+     */
+
+    // Admin-specific methods
+    public function manageUsers(Request $request): View
+    {
+        $this->authorize('admin-access');
+        
+        $users = User::with('profile')
+            ->when($request->role, function($q) use ($request) {
+                $q->where('role', $request->role);
+            })
+            ->when($request->status, function($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->latest()
+            ->paginate(20);
+        
+        return view('admin.users.index', compact('users'));
+    }
+
+    public function changeUserRole(Request $request, User $targetUser): RedirectResponse
+    {
+        $this->authorize('admin-access');
+        
+        $validated = $request->validate([
+            'role' => 'required|in:admin,support,moderator,user'
+        ]);
+
+        $targetUser->assignRole($validated['role']);
+
+        return redirect()->back()->with('success', 
+            "User {$targetUser->full_name} role changed to {$validated['role']}"
+        );
+    }
+
+    public function toggleUserStatus(Request $request, User $targetUser): RedirectResponse
+    {
+        $this->authorize('admin-access');
+        
+        $newStatus = $targetUser->status === 'active' ? 'inactive' : 'active';
+        $targetUser->update(['status' => $newStatus]);
+
+        return redirect()->back()->with('success', 
+            "User {$targetUser->full_name} status changed to {$newStatus}"
+        );
+    }
+
+    // Support-specific methods
+    public function supportDashboard(): View
+    {
+        $this->authorize('staff-access');
+        
+        $user = Auth::user();
+        $supportData = $this->getSupportDashboardData();
+        
+        return view('support.dashboard.index', compact('user', 'supportData'));
+    }
+
+    public function searchUsers(Request $request): JsonResponse
+    {
+        $this->authorize('staff-access');
+        
+        $query = $request->get('query');
+        $users = User::with('profile')
+            ->where(function($q) use ($query) {
+                $q->where('first_name', 'like', "%{$query}%")
+                  ->orWhere('last_name', 'like', "%{$query}%")
+                  ->orWhere('email', 'like', "%{$query}%")
+                  ->orWhere('username', 'like', "%{$query}%");
+            })
+            ->limit(10)
+            ->get();
+        
+        return response()->json(['users' => $users]);
+    }
+
+    // Moderator-specific methods
+    public function moderatorDashboard(): View
+    {
+        $this->authorize('manage-users');
+        
+        $user = Auth::user();
+        $moderatorData = $this->getModeratorDashboardData();
+        
+        return view('moderator.dashboard.index', compact('user', 'moderatorData'));
+    }
+
+    public function moderateUsers(Request $request): View
+    {
+        $this->authorize('manage-users');
+        
+        $users = User::regularUsers()
+            ->with('profile')
+            ->when($request->status, function($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->latest()
+            ->paginate(20);
+        
+        return view('moderator.users.index', compact('users'));
+    }
+
+    public function suspendUser(Request $request, User $targetUser): RedirectResponse
+    {
+        $this->authorize('manage-users');
+        
+        // Prevent moderators from suspending staff
+        if ($targetUser->hasStaffPrivileges()) {
+            abort(403, 'Cannot suspend staff members.');
+        }
+        
+        $targetUser->update(['status' => 'inactive']);
+        
+        return redirect()->back()->with('success', 
+            "User {$targetUser->full_name} has been suspended"
+        );
+    }
+
+    public function unsuspendUser(Request $request, User $targetUser): RedirectResponse
+    {
+        $this->authorize('manage-users');
+        
+        $targetUser->update(['status' => 'active']);
+        
+        return redirect()->back()->with('success', 
+            "User {$targetUser->full_name} has been unsuspended"
+        );
+    }
+
+    public function warnUser(Request $request, User $targetUser): RedirectResponse
+    {
+        $this->authorize('manage-users');
+        
+        $validated = $request->validate([
+            'warning_message' => 'required|string|max:1000'
+        ]);
+        
+        // Add warning logic here (notifications, logging, etc.)
+        
+        return redirect()->back()->with('success', 
+            "Warning sent to {$targetUser->full_name}"
+        );
+    }
+
+    // System settings methods (admin only)
+    public function systemSettings(): View
+    {
+        $this->authorize('admin-access');
+        
+        $user = Auth::user();
+        // Add system settings data here
+        $settings = []; // Load from settings table or config
+        
+        return view('admin.system.settings', compact('user', 'settings'));
+    }
+
+    public function updateSystemSettings(Request $request): RedirectResponse
+    {
+        $this->authorize('admin-access');
+        
+        // Add system settings update logic here
+        
+        return redirect()->back()->with('success', 'System settings updated successfully');
+    }
+
+    /**
+     * Original methods maintained for backward compatibility
+     */
+    
+    /**
+     * Get comprehensive dashboard data for regular users
+     */
+    private function getComprehensiveDashboardData(User $user): array
+    {
+        return [
+            // Balance Information
+            'total_balance' => $this->getTotalBalance($user),
+            'available_balance' => $this->getAvailableBalance($user),
+            'locked_balance' => $this->getLockedBalance($user),
+            
+            // Earnings Information
+            'total_earnings' => $this->getTotalEarnings($user),
+            'today_earnings' => $this->getTodayEarnings($user),
+            'this_month_earnings' => $this->getThisMonthEarnings($user),
+            
+            // Deposit Information
+            'total_deposits' => $this->getTotalDeposits($user),
+            'last_deposit' => $this->getLastDeposit($user),
+            'recent_deposits' => $this->getRecentDeposits($user, 3),
+            'pending_deposits' => $this->getPendingDeposits($user),
+            
+            // Withdrawal Information
+            'total_withdrawals' => $this->getTotalWithdrawals($user),
+            'last_withdrawal' => $this->getLastWithdrawal($user),
+            'recent_withdrawals' => $this->getRecentWithdrawals($user, 3),
+            'pending_withdrawals' => $this->getPendingWithdrawals($user),
+            
+            // Investment Information
+            'total_investments' => $this->getTotalInvestments($user),
+            'active_investments' => $this->getActiveInvestments($user),
+            'investment_returns' => $this->getInvestmentReturns($user),
+            'recent_investments' => $this->getRecentInvestments($user, 3),
+            
+            // Referral Information
+            'total_referrals' => $this->getTotalReferrals($user),
+            'active_referrals' => $this->getActiveReferrals($user),
+            'total_referral_earnings' => $this->getTotalReferralEarnings($user),
+            'pending_commissions' => $this->getPendingCommissions($user),
+            'referral_link' => $this->getReferralLink($user),
+            
+            // Recent Activity
+            'recent_transactions' => $this->getRecentTransactions($user, 10),
+            
+            // Account Stats
+            'account_age_days' => $this->getAccountAgeDays($user),
+            'last_login' => $user->last_login_at,
+        ];
+    }
+
+    // Balance Methods - Updated to match WalletController pattern
+    private function getTotalBalance(User $user): float
+    {
+        // Get total USD value from all crypto wallets - same pattern as WalletController
+        $wallets = \App\Models\CryptoWallet::where('user_id', $user->id)
+            ->with('cryptocurrency')
+            ->active()
+            ->get();
+        
+        return $wallets->sum('usd_value');
+    }
+
+    private function getAvailableBalance(User $user): float
+    {
+        // For crypto wallets, available balance is typically the same as total balance
+        // unless you have pending withdrawals or locked amounts
+        $totalBalance = $this->getTotalBalance($user);
+        $lockedBalance = $this->getLockedBalance($user);
+        return max(0, $totalBalance - $lockedBalance);
+    }
+
+    private function getLockedBalance(User $user): float
+    {
+        // Calculate locked balance from pending withdrawals
+        return $user->transactions()
+            ->where('type', \App\Models\Transaction::TYPE_WITHDRAWAL)
+            ->whereIn('status', [\App\Models\Transaction::STATUS_PENDING, \App\Models\Transaction::STATUS_PROCESSING])
+            ->sum('amount');
+    }
+
+    // Earnings Methods
+    private function getTotalEarnings(User $user): float
+    {
+        return $user->transactions()
+            ->whereIn('type', [Transaction::TYPE_COMMISSION, Transaction::TYPE_ROI, Transaction::TYPE_BONUS])
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->sum('amount');
+    }
+
+    private function getTodayEarnings(User $user): float
+    {
+        return $user->transactions()
+            ->whereIn('type', [Transaction::TYPE_COMMISSION, Transaction::TYPE_ROI, Transaction::TYPE_BONUS])
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->whereDate('created_at', today())
+            ->sum('amount');
+    }
+
+    private function getThisMonthEarnings(User $user): float
+    {
+        return $user->transactions()
+            ->whereIn('type', [Transaction::TYPE_COMMISSION, Transaction::TYPE_ROI, Transaction::TYPE_BONUS])
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('amount');
+    }
+
+    // Deposit Methods - Updated to work with Transaction system
+    private function getTotalDeposits(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_DEPOSIT)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->sum('amount');
+    }
+
+    private function getLastDeposit(User $user): float
+    {
+        $lastDeposit = $user->transactions()
+            ->where('type', Transaction::TYPE_DEPOSIT)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->latest()
+            ->first();
+        
+        return $lastDeposit ? $lastDeposit->amount : 0.00;
+    }
+
+    private function getRecentDeposits(User $user, int $limit = 5)
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_DEPOSIT)
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
+
+    private function getPendingDeposits(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_DEPOSIT)
+            ->where('status', Transaction::STATUS_PENDING)
+            ->sum('amount');
+    }
+
+    // Withdrawal Methods - Updated to work with Transaction system
+    private function getTotalWithdrawals(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_WITHDRAWAL)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->sum('amount');
+    }
+
+    private function getLastWithdrawal(User $user): float
+    {
+        $lastWithdrawal = $user->transactions()
+            ->where('type', Transaction::TYPE_WITHDRAWAL)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->latest()
+            ->first();
+        
+        return $lastWithdrawal ? $lastWithdrawal->amount : 0.00;
+    }
+
+    private function getRecentWithdrawals(User $user, int $limit = 5)
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_WITHDRAWAL)
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
+
+    private function getPendingWithdrawals(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_WITHDRAWAL)
+            ->whereIn('status', [Transaction::STATUS_PENDING, Transaction::STATUS_PROCESSING])
+            ->sum('amount');
+    }
+
+    // Investment Methods
+    private function getTotalInvestments(User $user): float
+    {
+        // If you have a user_investments table, use that
+        // Otherwise, sum investment transactions
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_INVESTMENT)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->sum('amount');
+    }
+
+    private function getActiveInvestments(User $user): int
+    {
+        // Count active investments - adjust based on your investment tracking method
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_INVESTMENT)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->whereDate('created_at', '>=', now()->subDays(365)) // Active within last year
+            ->count();
+    }
+
+    private function getInvestmentReturns(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_ROI)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->sum('amount');
+    }
+
+    private function getRecentInvestments(User $user, int $limit = 5)
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_INVESTMENT)
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
+
+    // Referral Methods
+    private function getTotalReferrals(User $user): int
+    {
+        return $user->directReferrals()->count();
+    }
+
+    private function getActiveReferrals(User $user): int
+    {
+        return $user->directReferrals()
+            ->where('status', 'active')
+            ->count();
+    }
+
+    private function getTotalReferralEarnings(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_COMMISSION)
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->sum('amount');
+    }
+
+    private function getPendingCommissions(User $user): float
+    {
+        return $user->transactions()
+            ->where('type', Transaction::TYPE_COMMISSION)
+            ->where('status', Transaction::STATUS_PENDING)
+            ->sum('amount');
+    }
+
+    private function getReferralLink(User $user): string
+    {
+        return $user->profile?->referrallink ?? url('/register?ref=' . $user->referral_code);
+    }
+
+    // Activity Methods
+    private function getRecentTransactions(User $user, int $limit = 10)
+    {
+        return $user->transactions()
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
+
+    // Account Methods
+    private function getAccountAgeDays(User $user): int
+    {
+        return $user->created_at->diffInDays(now());
+    }
+
+    // Investment method for routes
+    public function investments(): View
+    {
+        $user = Auth::user();
+        $user->load(['profile', 'transactions' => function($query) {
+            $query->where('type', Transaction::TYPE_INVESTMENT)->latest();
+        }]);
+        
+        $investmentData = [
+            'total_investments' => $this->getTotalInvestments($user),
+            'active_investments' => $this->getActiveInvestments($user),
+            'investment_returns' => $this->getInvestmentReturns($user),
+            'recent_investments' => $this->getRecentInvestments($user, 10),
+        ];
+        
+        return view('investments.index', compact('user', 'investmentData'));
+    }
+
+    /**
+     * Support section methods - keeping existing ones
+     */
+    public function contact(Request $request): View
+    {
+        $user = Auth::user();
+        $user->load(['profile']);
+        return view('support.contact-us', compact('user'));
+    }
+
+    public function faqs(Request $request): View
+    {
+        $user = Auth::user();
+        $user->load(['profile']);
+        return view('support.faqs', compact('user'));
+    }
+
+    public function news(Request $request): View
+    {
+        $user = Auth::user();
+        $user->load(['profile']);
+        return view('support.timeline', compact('user'));
+    }
+
+    public function about(Request $request): View
+    {
+        $user = Auth::user();
+        $user->load(['profile']);
+        return view('support.about-us', compact('user'));
+    }
+
+    /**
+     * AJAX endpoints for real-time updates
+     */
+    public function getBalanceUpdate(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        
+        return response()->json([
+            'total_balance' => $this->getTotalBalance($user),
+            'available_balance' => $this->getAvailableBalance($user),
+            'locked_balance' => $this->getLockedBalance($user),
+        ]);
+    }
+
+    public function getEarningsUpdate(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        
+        return response()->json([
+            'total_earnings' => $this->getTotalEarnings($user),
+            'today_earnings' => $this->getTodayEarnings($user),
+            'this_month_earnings' => $this->getThisMonthEarnings($user),
+        ]);
+    }
+
+    public function getRecentActivity(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $limit = $request->get('limit', 10);
+        
+        return response()->json([
+            'transactions' => $this->getRecentTransactions($user, $limit),
+        ]);
+    }
+
+    public function getReferralStats(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        
+        return response()->json([
+            'total_referrals' => $this->getTotalReferrals($user),
+            'active_referrals' => $this->getActiveReferrals($user),
+            'total_referral_earnings' => $this->getTotalReferralEarnings($user),
+            'pending_commissions' => $this->getPendingCommissions($user),
+        ]);
+    }
+
+    /**
+     * Get pending commissions detail for referral system
+     */
+    public function getPendingCommissionsDetail(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        
+        $pendingCommissions = $user->transactions()
+            ->where('type', Transaction::TYPE_COMMISSION)
+            ->where('status', Transaction::STATUS_PENDING)
+            ->with(['user' => function($query) {
+                $query->select('id', 'first_name', 'last_name', 'email');
+            }])
+            ->latest()
+            ->get();
+
+        $summary = [
+            'total_pending_amount' => $pendingCommissions->sum('amount'),
+            'total_commissions' => $pendingCommissions->count(),
+            'earliest_date' => $pendingCommissions->min('created_at'),
+            'farthest_date' => $pendingCommissions->max('created_at'),
+            'ready_commissions' => $pendingCommissions->where('created_at', '<=', now()->subDays(30))->count(),
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'commissions' => $pendingCommissions,
+                'summary' => $summary
+            ]
+        ]);
+    }
+
+    /**
+     * Existing methods maintained for backward compatibility
+     */
+    
+    /**
+     * Get dashboard statistics.
+     */
+    private function getDashboardStats(User $user): array
+    {
+        // Referral statistics
+        $totalReferrals = $user->referralTree()->count();
+        $activeReferrals = $user->directReferrals()->where('status', 'active')->count();
+        $referralEarnings = $user->referrals()->sum('commission_earned');
+        $maxLevel = $user->referralTree()->max('level') ?? 0;
+
+        // Financial statistics
+        $pendingCommissions = $user->transactions()
+            ->where('type', 'commission')
+            ->where('status', 'pending')
+            ->sum('amount');
+
+        $pendingWithdrawals = $user->transactions()
+            ->where('type', 'withdrawal')
+            ->whereIn('status', ['pending', 'processing'])
+            ->sum('amount');
+
+        // Investment statistics
+        $totalInvestments = $user->investments()
+            ->where('status', 'active')
+            ->sum('amount');
+
+        $activeInvestmentsCount = $user->investments()
+            ->where('status', 'active')
+            ->count();
+
+        return [
+            'totalReferrals' => $totalReferrals,
+            'activeReferrals' => $activeReferrals,
+            'referralEarnings' => $referralEarnings,
+            'maxLevel' => $maxLevel,
+            'pendingCommissions' => $pendingCommissions,
+            'pendingWithdrawals' => $pendingWithdrawals,
+            'totalInvestments' => $totalInvestments,
+            'activeInvestmentsCount' => $activeInvestmentsCount,
+        ];
+    }
+
+    /**
+     * Get recent referrals.
+     */
+    private function getRecentReferrals(User $user)
+    {
+        return $user->directReferrals()
+            ->with('profile')
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(function ($referral) {
+                return (object) [
+                    'id' => $referral->id,
+                    'fullname' => $referral->full_name,
+                    'email' => $referral->email,
+                    'avatar' => $referral->profile->avatar ?? '/images/users/avatar-1.jpg',
+                    'level' => 1, // Direct referral
+                    'created_at' => $referral->created_at,
+                    'status' => $referral->status,
+                    'commission' => $this->calculateReferralCommission($referral),
+                ];
+            });
+    }
+
+    /**
+     * Get user wallets (dummy data for now).
+     */
+    private function getUserWallets(User $user)
+    {
+        // Return dummy wallet data until crypto wallet system is implemented
+        return [
+            (object) [
+                'id' => 1,
+                'name' => 'Bitcoin Wallet',
+                'currency' => 'BTC',
+                'balance' => 0.00000000,
+                'usd_rate' => 45250.00
+            ],
+            (object) [
+                'id' => 2,
+                'name' => 'Ethereum Wallet',
+                'currency' => 'ETH',
+                'balance' => 0.00000000,
+                'usd_rate' => 2850.00
+            ],
+            (object) [
+                'id' => 3,
+                'name' => 'USDT Wallet',
+                'currency' => 'USDT',
+                'balance' => 0.00000000,
+                'usd_rate' => 1.00
+            ],
+        ];
+    }
+
+    /**
+     * Calculate referral commission (placeholder).
+     */
+    private function calculateReferralCommission(User $referral): float
+    {
+        // Get commission from user_referrals table
+        $referralRecord = DB::table('user_referrals')
+            ->where('user_id', $referral->id)
+            ->first();
+
+        return $referralRecord ? $referralRecord->commission_earned : 0.00;
+    }
+
+    /**
+     * Profile management methods
+     */
+    public function profile(): View
+    {
+        $user = Auth::user();
+        $user->load('profile');
+        return view('profile.edit', compact('user'));
+    }
+
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            // User table fields
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id)
+            ],
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                'alpha_dash',
+                Rule::unique('users')->ignore($user->id)
+            ],
+            'phone' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($user->id)
+            ],
+
+            // UserProfile table fields
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'country' => 'required|string|max:2',
+            'city' => 'required|string|max:255',
+            'state_province' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:1000',
+            'date_of_birth' => 'nullable|date|before:today',
+            'gender' => 'nullable|in:male,female,other',
+            
+            // Business information
+            'business_name' => 'nullable|string|max:255',
+            'business_address' => 'nullable|string|max:1000',
+            
+            // Social media links
+            'facebook_url' => 'nullable|url|max:255',
+            'twitter_url' => 'nullable|url|max:255',
+            'linkedin_url' => 'nullable|url|max:255',
+            'telegram_username' => 'nullable|string|max:255|regex:/^@?[a-zA-Z0-9_]+$/',
+            'whatsapp_number' => 'nullable|string|max:255',
+            
+            // Notification preferences
+            'email_notifications' => 'boolean',
+            'sms_notifications' => 'boolean',
+            
+            // Localization
+            'preferred_language' => 'required|string|max:5|in:en,es,fr,de,ja',
+            'timezone' => 'required|string|max:255',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Handle avatar upload
+            $avatarPath = null;
+            if ($request->hasFile('avatar')) {
+                // Delete old avatar if exists
+                if ($user->profile && $user->profile->avatar) {
+                    Storage::disk('public')->delete($user->profile->avatar);
+                }
+                
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            }
+
+            // Update user basic information
+            $user->update([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'username' => $validated['username'],
+                'phone' => $validated['phone'],
+            ]);
+
+            // Prepare profile data
+            $profileData = [
+                'country' => $validated['country'],
+                'city' => $validated['city'],
+                'state_province' => $validated['state_province'] ?? null,
+                'postal_code' => $validated['postal_code'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'date_of_birth' => $validated['date_of_birth'] ?? null,
+                'gender' => $validated['gender'] ?? null,
+                'business_name' => $validated['business_name'] ?? null,
+                'business_address' => $validated['business_address'] ?? null,
+                'facebook_url' => $validated['facebook_url'] ?? null,
+                'twitter_url' => $validated['twitter_url'] ?? null,
+                'linkedin_url' => $validated['linkedin_url'] ?? null,
+                'telegram_username' => $validated['telegram_username'] ?? null,
+                'whatsapp_number' => $validated['whatsapp_number'] ?? null,
+                'email_notifications' => $request->has('email_notifications') ? 1 : 0,
+                'sms_notifications' => $request->has('sms_notifications') ? 1 : 0,
+                'preferred_language' => $validated['preferred_language'],
+                'timezone' => $validated['timezone'],
+            ];
+
+            // Add avatar if uploaded
+            if ($avatarPath) {
+                $profileData['avatar'] = $avatarPath;
+            }
+
+            // Update or create profile
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $profileData
+            );
+
+            DB::commit();
+
+            Log::info('User profile updated', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'updated_fields' => array_keys($validated),
+                'avatar_updated' => $avatarPath ? true : false,
+            ]);
+
+            return redirect()->route('user.profile')
+                ->with('success', 'Profile updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Profile update failed', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to update profile. Please try again.');
+        }
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        try {
+            $user = Auth::user();
+            $user->update([
+                'password' => Hash::make($validated['password'])
+            ]);
+
+            return redirect()->route('user.profile')
+                ->with('success', 'Password updated successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('user.profile')
+                ->with('error', 'Failed to update password. Please try again.');
+        }
+    }
+
+    /**
+     * Get dashboard stats via AJAX.
+     */
+    public function getStats(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $stats = $this->getDashboardStats($user);
+        return response()->json($stats);
+    }
+}
