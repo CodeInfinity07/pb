@@ -250,6 +250,11 @@ class WalletController extends Controller
                 $data = json_decode($request->getContent(), true) ?? [];
             }
 
+            if (!$this->paymentService->verifyCallbackSignature($data)) {
+                Log::warning('Plisio webhook signature verification failed', ['data' => $data]);
+                return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 401);
+            }
+
             if (empty($data['order_number']) && empty($data['txn_id'])) {
                 Log::warning('Plisio webhook missing required fields', ['data' => $data]);
                 return response()->json(['status' => 'error', 'message' => 'Missing required fields'], 400);
@@ -258,8 +263,8 @@ class WalletController extends Controller
             $status = $data['status'] ?? '';
             $orderId = $data['order_number'] ?? '';
             $txnId = $data['txn_id'] ?? '';
-            $amount = floatval($data['source_amount'] ?? $data['amount'] ?? 0);
-            $cryptoAmount = $data['amount'] ?? null;
+            $sourceAmount = floatval($data['source_amount'] ?? 0);
+            $cryptoAmount = floatval($data['amount'] ?? 0);
             $currency = $data['currency'] ?? $data['psys_cid'] ?? '';
             $confirmations = intval($data['confirmations'] ?? 0);
 
@@ -267,15 +272,16 @@ class WalletController extends Controller
                 'status' => $status,
                 'order_id' => $orderId,
                 'txn_id' => $txnId,
-                'amount' => $amount,
+                'source_amount' => $sourceAmount,
+                'crypto_amount' => $cryptoAmount,
                 'currency' => $currency,
                 'confirmations' => $confirmations
             ]);
 
-            if ($status === 'completed' || $status === 'mismatch') {
+            if ($status === 'completed') {
                 $result = $this->confirmPlisioDeposit(
                     $orderId,
-                    $amount,
+                    $sourceAmount,
                     $currency,
                     $txnId,
                     json_encode($data),
@@ -289,6 +295,15 @@ class WalletController extends Controller
                     Log::error('=== PLISIO DEPOSIT FAILED ===', ['order_id' => $orderId]);
                     return response()->json(['status' => 'error', 'message' => 'Deposit confirmation failed'], 500);
                 }
+            }
+
+            if ($status === 'mismatch') {
+                Log::warning('Plisio payment amount mismatch - requires manual review', [
+                    'order_id' => $orderId,
+                    'expected_amount' => $data['expected_amount'] ?? 'unknown',
+                    'received_amount' => $cryptoAmount
+                ]);
+                return response()->json(['status' => 'success', 'message' => 'Mismatch logged for review']);
             }
 
             if (in_array($status, ['pending', 'new'])) {
@@ -318,10 +333,10 @@ class WalletController extends Controller
     /**
      * Confirm Plisio deposit and credit user wallet
      */
-    private function confirmPlisioDeposit(string $orderId, float $amount, string $currency, string $txnId, string $rawData, int $confirmations): bool
+    private function confirmPlisioDeposit(string $orderId, float $sourceAmount, string $currency, string $txnId, string $rawData, int $confirmations): bool
     {
         try {
-            return DB::transaction(function () use ($orderId, $amount, $currency, $txnId, $rawData, $confirmations) {
+            return DB::transaction(function () use ($orderId, $sourceAmount, $currency, $txnId, $rawData, $confirmations) {
                 $orderParts = explode('_', $orderId);
 
                 if (count($orderParts) !== 3) {
@@ -340,6 +355,7 @@ class WalletController extends Controller
 
                 $wallet = CryptoWallet::where('user_id', $userId)
                     ->where('currency', $walletCurrency)
+                    ->lockForUpdate()
                     ->first();
 
                 if (!$wallet) {
@@ -358,6 +374,7 @@ class WalletController extends Controller
 
                 $transaction = Transaction::where('transaction_id', $orderId)
                     ->where('status', Transaction::STATUS_PENDING)
+                    ->lockForUpdate()
                     ->first();
 
                 if (!$transaction) {
@@ -369,21 +386,23 @@ class WalletController extends Controller
                         return true;
                     }
 
-                    $transaction = Transaction::create([
-                        'user_id' => $userId,
-                        'transaction_id' => $orderId,
-                        'type' => Transaction::TYPE_DEPOSIT,
-                        'amount' => $amount,
-                        'currency' => $walletCurrency,
-                        'status' => Transaction::STATUS_PENDING,
-                        'payment_method' => 'plisio',
-                        'description' => "Crypto deposit - {$walletCurrency} via Plisio Gateway",
-                        'metadata' => ['wallet_id' => $wallet->id, 'gateway' => 'plisio', 'created_via' => 'webhook']
+                    Log::error('No pending transaction found for Plisio deposit', ['order_id' => $orderId]);
+                    return false;
+                }
+
+                $expectedAmount = $transaction->amount;
+                if (abs($sourceAmount - $expectedAmount) > 0.01) {
+                    Log::warning('Plisio deposit amount mismatch', [
+                        'order_id' => $orderId,
+                        'expected' => $expectedAmount,
+                        'received' => $sourceAmount
                     ]);
                 }
 
+                $creditAmount = $sourceAmount > 0 ? $sourceAmount : $expectedAmount;
+
                 $oldBalance = $wallet->balance;
-                $wallet->increment('balance', $amount);
+                $wallet->increment('balance', $creditAmount);
                 $newBalance = $wallet->fresh()->balance;
 
                 $transaction->update([
@@ -395,6 +414,7 @@ class WalletController extends Controller
                         'confirmations' => $confirmations,
                         'old_balance' => $oldBalance,
                         'new_balance' => $newBalance,
+                        'credited_amount' => $creditAmount,
                         'gateway' => 'plisio'
                     ]),
                 ]);
@@ -402,7 +422,7 @@ class WalletController extends Controller
                 Log::info('=== PLISIO DEPOSIT PROCESSED ===', [
                     'order_id' => $orderId,
                     'user_id' => $userId,
-                    'amount' => $amount,
+                    'credited_amount' => $creditAmount,
                     'old_balance' => $oldBalance,
                     'new_balance' => $newBalance
                 ]);
