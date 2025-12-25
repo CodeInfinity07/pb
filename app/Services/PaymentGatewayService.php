@@ -49,6 +49,7 @@ class PaymentGatewayService
                 'order_number' => $orderId,
                 'order_name' => $package['name'] ?? "Deposit - {$orderId}",
                 'email' => $userInfo['email'] ?? '',
+                'api_key' => $this->secretKey,
             ];
 
             if ($this->callbackUrl) {
@@ -57,13 +58,11 @@ class PaymentGatewayService
 
             Log::info('Making Plisio invoice request', [
                 'url' => "{$this->apiUrl}/invoices/new",
-                'params' => $params
+                'params' => array_merge($params, ['api_key' => '[REDACTED]'])
             ]);
 
             $response = Http::timeout($this->timeout)
-                ->withHeaders(['Api-Key' => $this->secretKey])
-                ->asForm()
-                ->post("{$this->apiUrl}/invoices/new", $params);
+                ->get("{$this->apiUrl}/invoices/new", $params);
 
             Log::info('Plisio API Response', [
                 'status_code' => $response->status(),
@@ -120,10 +119,11 @@ class PaymentGatewayService
             $plisioCurrency = $this->mapCurrencyToPlisio($currency);
 
             $params = [
-                'psys_cid' => $plisioCurrency,
+                'currency' => $plisioCurrency,
                 'to' => $address,
                 'amount' => $formattedAmount,
                 'type' => 'cash_out',
+                'api_key' => $this->secretKey,
             ];
 
             Log::info('Processing Plisio withdrawal request', [
@@ -135,9 +135,7 @@ class PaymentGatewayService
             ]);
 
             $response = Http::timeout($this->timeout)
-                ->withHeaders(['Api-Key' => $this->secretKey])
-                ->asForm()
-                ->post("{$this->apiUrl}/operations/withdraw", $params);
+                ->get("{$this->apiUrl}/operations/withdraw", $params);
 
             Log::info('Plisio Withdrawal API Response', [
                 'status_code' => $response->status(),
@@ -186,8 +184,9 @@ class PaymentGatewayService
             $plisioCurrency = $this->mapCurrencyToPlisio($currency);
 
             $response = Http::timeout($this->timeout)
-                ->withHeaders(['Api-Key' => $this->secretKey])
-                ->get("{$this->apiUrl}/balances/{$plisioCurrency}");
+                ->get("{$this->apiUrl}/balances/{$plisioCurrency}", [
+                    'api_key' => $this->secretKey
+                ]);
 
             if (!$response->successful()) {
                 throw new Exception('Failed to get balance');

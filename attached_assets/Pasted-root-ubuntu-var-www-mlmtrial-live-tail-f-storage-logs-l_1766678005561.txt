@@ -1,0 +1,1488 @@
+root@ubuntu:/var/www/mlmtrial.live# tail -f storage/logs/laravel.log 
+[2025-12-25 20:52:02] production.INFO: Processing due investment returns {"total_due_investments":0,"started_at":"2025-12-25 20:52:02"} 
+[2025-12-25 20:52:02] production.INFO: Bulk investment return processing completed {"total_processed":0,"total_failed":0,"total_amount_distributed":0,"completed_at":"2025-12-25 20:52:02"} 
+[2025-12-25 20:52:02] production.INFO: Scheduled investment returns processing completed {"success":true,"processed":0,"failed":0,"total_amount":0,"errors":[],"message":"Processed 0 returns, 0 failed. Total distributed: $0.00"} 
+[2025-12-25 20:52:03] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:52:03] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:52:03] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:52:03] production.INFO: Investment returns processing completed successfully {"timestamp":"2025-12-25 20:52:03"} 
+[2025-12-25 20:52:20] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:52:20] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:52:20] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:52:42] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:52:42] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:52:42] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:52:42] production.INFO: Withdrawal transaction created {"transaction_id":7244,"order_id":"UB_5_1766677962","user_id":5,"wallet_id":2,"currency":"USDT_BEP20","requested_amount":"30","fee":3.0,"fee_percentage":"10.00000000","actual_amount_sent":27.0,"to_address":"0x54f474d80664e441c9674955509f2dbaa4b62c38","old_balance":"743.95260000","new_balance":"713.95260000"} 
+[2025-12-25 20:52:42] production.INFO: Processing Plisio withdrawal request {"order_id":"UB_5_1766677962","currency":"USDT_BSC","amount":"27.00000000","to_address":"0x54f474d80664e441c9674955509f2dbaa4b62c38","user_id":5} 
+[2025-12-25 20:52:42] production.INFO: Plisio Withdrawal API Response {"status_code":500,"body":"<!DOCTYPE html>
+<html lang=\"en\" dir=\"ltr\">
+
+<head>
+  <meta charset=\"UTF-8\">
+  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+    <title> - 404 Not Found - Cryptocurrency Payment Gateway</title>
+
+  <link rel=\"preload\" href=\"/v2/fonts/ProximaNova-Bold.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
+  <link rel=\"preload\" href=\"/v2/fonts/ProximaNova-Extrabld.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
+  <link rel=\"preload\" href=\"/v2/fonts/SFProDisplay-Regular.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
+
+  
+        <link rel=\"preconnect\" href=\"https://stats.g.doubleclick.net\">
+    <link rel=\"dns-prefetch\" href=\"https://stats.g.doubleclick.net\">
+      <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">
+    <link rel=\"dns-prefetch\" href=\"https://www.googletagmanager.com\">
+  
+  <link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"/img/favicon/apple-icon-57x57.png\">
+<link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"/img/favicon/apple-icon-60x60.png\">
+<link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"/img/favicon/apple-icon-72x72.png\">
+<link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/img/favicon/apple-icon-76x76.png\">
+<link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"/img/favicon/apple-icon-114x114.png\">
+<link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"/img/favicon/apple-icon-120x120.png\">
+<link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"/img/favicon/apple-icon-144x144.png\">
+<link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"/img/favicon/apple-icon-152x152.png\">
+<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/img/favicon/apple-icon-180x180.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\"  href=\"/img/favicon/android-icon-192x192.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/img/favicon/favicon-32x32.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/img/favicon/favicon-96x96.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/img/favicon/favicon-16x16.png\">
+<meta name=\"msapplication-TileColor\" content=\"#4574eb\">
+<meta name=\"msapplication-TileImage\" content=\"/img/favicon/ms-icon-144x144.png\">
+<meta name=\"theme-color\" content=\"#ffffff\">  <meta name=\"robots\" content=\"noindex, follow\">
+<meta name=\"description\" content=\"Oops, nothing here… Looks like you’ve lost. Use the navigation menu below to get out.\">
+<meta name=\"csrf-param\" content=\"_csrf\">
+<meta name=\"csrf-token\" content=\"0M20v87nudrke5WUiaXqxEglsoCTvudHU9Mip2CU8iCxroWKjKLbkLxWz-Xe8K2BPHPqs9L4jhgf5UntJMG1Zw==\">
+
+<link href=\"/v2/styles/main.css?v=1748873027\" rel=\"stylesheet\">
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5T5S555V');</script>
+  <!-- End Google Tag Manager -->
+
+  <script src=\"https://cdn.onesignal.com/sdks/OneSignalSDK.js\" async=\"\"></script>
+  <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: 'f6d5b4fb-3dec-419f-afde-9c3e7ada34af',
+        allowLocalhostAsSecureOrigin: 0      });
+    });
+  </script>
+
+  <script>
+    localStorage.setItem('locale', 'en')
+  </script>
+    </head>
+
+<body class=\"page page--404\" itemscope itemtype=\"http://schema.org/WebSite\">
+  
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-5T5S555V\"
+  height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- wrapper-->
+  <div class=\"wrapper\">
+    <link itemprop=\"url\" href=\"https://api.plisio.net/site/error\" />
+    <meta itemprop=\"name\" content=\"Plisio\">
+    <meta itemprop=\"description\" content=\"Plisio is a payment gateway for Bitcoin, Litecoin, Ethereum and 30 other cryptocurrencies. With our API any website can accept crypto payments.\">
+
+    
+    <!-- header-->
+    <header class=\"header \" data-controller=\"header\">
+      <div class=\"container\">
+        <div class=\"header__inner\">
+
+          <!-- logo-->
+          <div class=\"header__logo-container\">
+            <a class=\"header-logo\" href=\"/\">
+              <img src=\"/v2/images/logo-color.svg\" alt=\"Plisio logo\" width=\"75\" height=\"48\">
+            </a>
+          </div>
+
+          <!-- navigation-->
+          <div class=\"header__nav-container\">
+            <div class=\"nav\" data-controller=\"nav\" data-nav-target=\"main\">
+
+              <!-- burger-->
+              <button class=\"nav__burger\" data-action=\"click->nav#open\">
+                <svg class=\"icon\">
+                  <use xlink:href=\"/v2/icons/sprite.svg#icons-menu\"></use>
+                </svg>
+              </button>
+
+              <!-- body-->
+              <div class=\"nav__body\">
+
+                <!-- overlay-->
+                <div class=\"nav__overlay\" data-nav-target=\"overlay\" data-action=\"click->nav#close\"></div>
+
+                <!-- menu-->
+                
+<nav class=\"nav__menu\">
+  <ul class=\"nav__list\">
+
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Product  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-shopping\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Crypto Payment Gateway</div>
+    <small class=\"nav-submenu__link-desc\">Revolutionizing payments</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/personal\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-wallet\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Crypto Wallet</div>
+    <small class=\"nav-submenu__link-desc\">Secure digital assets</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/crypto-invoice\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-invoice\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Crypto Invoices</div>
+    <small class=\"nav-submenu__link-desc\">Effortless billing solutions</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/mass-payouts\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-mass-payouts\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Mass Payouts</div>
+    <small class=\"nav-submenu__link-desc\">Streamlined bulk transfers</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/white-label\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-guarantee\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">White Label</div>
+    <small class=\"nav-submenu__link-desc\">Customized brand solutions</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/donate-page\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-gift\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Donations</div>
+    <small class=\"nav-submenu__link-desc\">Empowering giving with cryptocurrency</small>
+  </div>
+</a>
+
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Connect  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/documentation\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-automation\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">API</div>
+    <small class=\"nav-submenu__link-desc\">Integrate & innovate</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/integrations\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-api\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Integration solutions</div>
+    <small class=\"nav-submenu__link-desc\">Optimized plugins and libraries for smooth integration</small>
+  </div>
+</a>
+
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Learn  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/blog\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-document\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Blog</div>
+    <small class=\"nav-submenu__link-desc\">Insights and updates</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/faq\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-question\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">FAQ</div>
+    <small class=\"nav-submenu__link-desc\">Clarifying your queries</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<span class=\"nav-submenu__link js_intercomToggle\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-support\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Help</div>
+    <small class=\"nav-submenu__link-desc\">Support and guidance</small>
+  </div>
+</span>
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Company  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/security\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-shield\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Security</div>
+    <small class=\"nav-submenu__link-desc\">Guarding your digital assets</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/bug-bounty\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-bug\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Bug Bounty</div>
+    <small class=\"nav-submenu__link-desc\">Rewarding security research</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/affiliate-program\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-people\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Affiliate Program</div>
+    <small class=\"nav-submenu__link-desc\">Earn extra income</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/contacts\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-chat\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Contact us</div>
+    <small class=\"nav-submenu__link-desc\">Reach out for assistance</small>
+  </div>
+</a>
+
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item  \">
+      
+<a class=\"nav__link\" href=\"/pricing\">
+  Pricing</a>
+
+
+          </li>
+    </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+
+          <!-- access-->
+          <div class=\"header__user-container\">
+                          
+
+<div class=\"header__user-container\">
+  <div class=\"header-access\">
+    <a class=\"header-access__login-icon link\" href=\"/account/login\">
+      <svg class=\"icon\">
+        <use xlink:href=\"/v2/icons/sprite.svg#icons-user\"></use>
+      </svg>
+    </a>
+    <div class=\"header-access__buttons\">
+      <a class=\"header-access__login link text-accent-h5\" href=\"/account/login\">
+        Log in      </a>
+      <a class=\"btn--primary btn btn--md\" href=\"/account/signup\" data-header-target=\"signup\">
+        <div class=\"btn__label\">
+          Sign up        </div>
+      </a>
+    </div>
+  </div>
+</div>
+                      </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- main-->
+    <main class=\"main\">
+      
+<!-- Error 404-->
+<section class=\"section section--relaxed not-found\">
+    <div class=\"container\"><img class=\"not-found__image\" src=\"/v2/images/404.svg\" alt=\"Not found\" width=\"532\" height=\"230\">
+        <div class=\"not-found__title\">Oops, nothing here…</div>
+        <div class=\"not-found__desc\">Looks like you’ve lost. Use the navigation menu below to get out.</div>
+    </div>
+</section>
+    </main>
+
+    <!-- footer -->
+    <footer class=\"footer\">
+      <div class=\"container\">
+        <div class=\"footer__inner\">
+
+          <!-- top-->
+          <div class=\"footer__top\">
+            
+<!-- menus-->
+<div class=\"footer__menus\">
+
+  <!-- products menu-->
+  <div class=\"footer__menu footer-menu\">
+    <div class=\"footer-menu__title\">Products</div>
+    <ul class=\"footer-menu__list\">
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/\">
+          Business        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/personal\">
+          Personal        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/pricing\">
+          Pricing        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/mass-payouts\">
+          Mass Payouts        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/white-label\">
+          White Label        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/crypto-invoice\">
+          Invoices        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/donate-page\">
+          Donations        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/integrations\">
+          Integrations        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- resources menu-->
+  <div class=\"footer__menu footer-menu\">
+    <div class=\"footer-menu__title\">Resources</div>
+    <ul class=\"footer-menu__list\">
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/documentation\">
+          API        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/blog\">
+          Blog        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/security\">
+          Security        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/bug-bounty\">
+          Bug Bounty        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/affiliate-program\">
+          Affiliate Program        </a>
+      </li>      
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/faq\">
+          FAQ        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/contacts\">
+          Contact us        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- policy menu-->
+  <div class=\"footer__menu footer-menu\">
+    <div class=\"footer-menu__title\">Policy</div>
+    <ul class=\"footer-menu__list\">
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link\" href=\"/docs/plisio-privacy-policy.pdf\" target=\"_blank\" rel=\"noopener\">
+          Privacy Policy        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link\" href=\"/docs/plisio-terms-of-use.pdf\" target=\"_blank\" rel=\"noopener\">
+          Terms of Service        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- misc-->
+<div class=\"footer__misc\">
+
+  <!-- follow us-->
+  <div class=\"footer-follow\">
+    <div class=\"footer-follow__title\">Follow us</div>
+    <ul class=\"footer-follow__list\">
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://www.facebook.com/Plisio-345369956110151\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-facebook\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://twitter.com/Plisio_official\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-twitter\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://www.youtube.com/channel/UCC5QUVNUPTO631J_Z2XOBZw\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-youtube\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://github.com/Plisio\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-github\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://medium.com/@plisio_official\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-medium\"></use>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  
+  <!-- language -->
+  <div class=\"footer__lang\">
+    <div class=\"lang-selector\" data-controller=\"dropdown\" data-dropdown-placement-value=\"top\">
+      <button class=\"lang-selector__trigger\" data-dropdown-target=\"trigger\" data-action=\"dropdown#toggle\">
+        <img class=\"lang-selector__trigger-flag\" src=\"/img/flags/en.png\" width=\"24\" height=\"24\" alt=\"en\" loading=\"lazy\">
+        <span class=\"lang-selector__trigger-text\">English</span>
+        <svg class=\"lang-selector__trigger-chevron icon\">
+          <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+        </svg>
+      </button>
+      <div class=\"lang-selector__dropdown dropdown hidden\" data-dropdown-target=\"dropdown\">
+        <ul class=\"dropdown__list\">
+                                                                    <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/en.png\" width=\"24\" height=\"24\" alt=\"en\" loading=\"lazy\">
+                    English                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ar\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ar.png\" width=\"24\" height=\"24\" alt=\"ar\" loading=\"lazy\">
+                    العربية                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=de\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/de.png\" width=\"24\" height=\"24\" alt=\"de\" loading=\"lazy\">
+                    Deutsch                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=el\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/el.png\" width=\"24\" height=\"24\" alt=\"el\" loading=\"lazy\">
+                    ελληνικά                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=es\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/es.png\" width=\"24\" height=\"24\" alt=\"es\" loading=\"lazy\">
+                    Español                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=fa\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/fa.png\" width=\"24\" height=\"24\" alt=\"fa\" loading=\"lazy\">
+                    فارسی                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=fr\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/fr.png\" width=\"24\" height=\"24\" alt=\"fr\" loading=\"lazy\">
+                    Français                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=hi\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/hi.png\" width=\"24\" height=\"24\" alt=\"hi\" loading=\"lazy\">
+                    हनद                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=id\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/id.png\" width=\"24\" height=\"24\" alt=\"id\" loading=\"lazy\">
+                    Bahasa Indonesia                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=it\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/it.png\" width=\"24\" height=\"24\" alt=\"it\" loading=\"lazy\">
+                    Italiano                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ja\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ja.png\" width=\"24\" height=\"24\" alt=\"ja\" loading=\"lazy\">
+                    日本語                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ko\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ko.png\" width=\"24\" height=\"24\" alt=\"ko\" loading=\"lazy\">
+                    한국어                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=pl\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/pl.png\" width=\"24\" height=\"24\" alt=\"pl\" loading=\"lazy\">
+                    Polski                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=pt\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/pt.png\" width=\"24\" height=\"24\" alt=\"pt\" loading=\"lazy\">
+                    Português                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ru\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ru.png\" width=\"24\" height=\"24\" alt=\"ru\" loading=\"lazy\">
+                    Русский                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=th\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/th.png\" width=\"24\" height=\"24\" alt=\"th\" loading=\"lazy\">
+                    ไทย                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=tr\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/tr.png\" width=\"24\" height=\"24\" alt=\"tr\" loading=\"lazy\">
+                    Türkçe                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=uk\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/uk.png\" width=\"24\" height=\"24\" alt=\"uk\" loading=\"lazy\">
+                    Українська                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=vi\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/vi.png\" width=\"24\" height=\"24\" alt=\"vi\" loading=\"lazy\">
+                    Tiếng Việt                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=zh\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/zh.png\" width=\"24\" height=\"24\" alt=\"zh\" loading=\"lazy\">
+                    简体中文                  </a>
+                </li>
+                                            </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+
+          <!-- copyright-->
+          <div class=\"footer__copy\">
+            &copy; 2025 Plisio, Inc. All Rights Reserved.          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src=\"/v2/scripts/vendors.js?v=1741358504\"></script>
+<script src=\"/v2/scripts/app.js?v=1741358504\"></script>
+    
+</body>
+
+</html>
+"} 
+[2025-12-25 20:52:42] production.ERROR: Plisio withdrawal API request failed {"order_id":"UB_5_1766677962","error":"HTTP request returned status code 500:
+<!DOCTYPE html>
+<html lang=\"en\" dir=\"ltr\">
+
+<head>
+  <meta charset=\"UTF-8\">
+  <meta http-equiv=\"X-UA-Compatible\" content (truncated...)
+","response":"<!DOCTYPE html>
+<html lang=\"en\" dir=\"ltr\">
+
+<head>
+  <meta charset=\"UTF-8\">
+  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+    <title> - 404 Not Found - Cryptocurrency Payment Gateway</title>
+
+  <link rel=\"preload\" href=\"/v2/fonts/ProximaNova-Bold.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
+  <link rel=\"preload\" href=\"/v2/fonts/ProximaNova-Extrabld.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
+  <link rel=\"preload\" href=\"/v2/fonts/SFProDisplay-Regular.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>
+
+  
+        <link rel=\"preconnect\" href=\"https://stats.g.doubleclick.net\">
+    <link rel=\"dns-prefetch\" href=\"https://stats.g.doubleclick.net\">
+      <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">
+    <link rel=\"dns-prefetch\" href=\"https://www.googletagmanager.com\">
+  
+  <link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"/img/favicon/apple-icon-57x57.png\">
+<link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"/img/favicon/apple-icon-60x60.png\">
+<link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"/img/favicon/apple-icon-72x72.png\">
+<link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/img/favicon/apple-icon-76x76.png\">
+<link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"/img/favicon/apple-icon-114x114.png\">
+<link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"/img/favicon/apple-icon-120x120.png\">
+<link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"/img/favicon/apple-icon-144x144.png\">
+<link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"/img/favicon/apple-icon-152x152.png\">
+<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/img/favicon/apple-icon-180x180.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\"  href=\"/img/favicon/android-icon-192x192.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/img/favicon/favicon-32x32.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/img/favicon/favicon-96x96.png\">
+<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/img/favicon/favicon-16x16.png\">
+<meta name=\"msapplication-TileColor\" content=\"#4574eb\">
+<meta name=\"msapplication-TileImage\" content=\"/img/favicon/ms-icon-144x144.png\">
+<meta name=\"theme-color\" content=\"#ffffff\">  <meta name=\"robots\" content=\"noindex, follow\">
+<meta name=\"description\" content=\"Oops, nothing here… Looks like you’ve lost. Use the navigation menu below to get out.\">
+<meta name=\"csrf-param\" content=\"_csrf\">
+<meta name=\"csrf-token\" content=\"0M20v87nudrke5WUiaXqxEglsoCTvudHU9Mip2CU8iCxroWKjKLbkLxWz-Xe8K2BPHPqs9L4jhgf5UntJMG1Zw==\">
+
+<link href=\"/v2/styles/main.css?v=1748873027\" rel=\"stylesheet\">
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5T5S555V');</script>
+  <!-- End Google Tag Manager -->
+
+  <script src=\"https://cdn.onesignal.com/sdks/OneSignalSDK.js\" async=\"\"></script>
+  <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: 'f6d5b4fb-3dec-419f-afde-9c3e7ada34af',
+        allowLocalhostAsSecureOrigin: 0      });
+    });
+  </script>
+
+  <script>
+    localStorage.setItem('locale', 'en')
+  </script>
+    </head>
+
+<body class=\"page page--404\" itemscope itemtype=\"http://schema.org/WebSite\">
+  
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-5T5S555V\"
+  height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- wrapper-->
+  <div class=\"wrapper\">
+    <link itemprop=\"url\" href=\"https://api.plisio.net/site/error\" />
+    <meta itemprop=\"name\" content=\"Plisio\">
+    <meta itemprop=\"description\" content=\"Plisio is a payment gateway for Bitcoin, Litecoin, Ethereum and 30 other cryptocurrencies. With our API any website can accept crypto payments.\">
+
+    
+    <!-- header-->
+    <header class=\"header \" data-controller=\"header\">
+      <div class=\"container\">
+        <div class=\"header__inner\">
+
+          <!-- logo-->
+          <div class=\"header__logo-container\">
+            <a class=\"header-logo\" href=\"/\">
+              <img src=\"/v2/images/logo-color.svg\" alt=\"Plisio logo\" width=\"75\" height=\"48\">
+            </a>
+          </div>
+
+          <!-- navigation-->
+          <div class=\"header__nav-container\">
+            <div class=\"nav\" data-controller=\"nav\" data-nav-target=\"main\">
+
+              <!-- burger-->
+              <button class=\"nav__burger\" data-action=\"click->nav#open\">
+                <svg class=\"icon\">
+                  <use xlink:href=\"/v2/icons/sprite.svg#icons-menu\"></use>
+                </svg>
+              </button>
+
+              <!-- body-->
+              <div class=\"nav__body\">
+
+                <!-- overlay-->
+                <div class=\"nav__overlay\" data-nav-target=\"overlay\" data-action=\"click->nav#close\"></div>
+
+                <!-- menu-->
+                
+<nav class=\"nav__menu\">
+  <ul class=\"nav__list\">
+
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Product  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-shopping\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Crypto Payment Gateway</div>
+    <small class=\"nav-submenu__link-desc\">Revolutionizing payments</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/personal\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-wallet\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Crypto Wallet</div>
+    <small class=\"nav-submenu__link-desc\">Secure digital assets</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/crypto-invoice\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-invoice\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Crypto Invoices</div>
+    <small class=\"nav-submenu__link-desc\">Effortless billing solutions</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/mass-payouts\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-mass-payouts\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Mass Payouts</div>
+    <small class=\"nav-submenu__link-desc\">Streamlined bulk transfers</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/white-label\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-guarantee\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">White Label</div>
+    <small class=\"nav-submenu__link-desc\">Customized brand solutions</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/donate-page\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-gift\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Donations</div>
+    <small class=\"nav-submenu__link-desc\">Empowering giving with cryptocurrency</small>
+  </div>
+</a>
+
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Connect  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/documentation\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-automation\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">API</div>
+    <small class=\"nav-submenu__link-desc\">Integrate & innovate</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/integrations\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-api\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Integration solutions</div>
+    <small class=\"nav-submenu__link-desc\">Optimized plugins and libraries for smooth integration</small>
+  </div>
+</a>
+
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Learn  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/blog\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-document\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Blog</div>
+    <small class=\"nav-submenu__link-desc\">Insights and updates</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/faq\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-question\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">FAQ</div>
+    <small class=\"nav-submenu__link-desc\">Clarifying your queries</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<span class=\"nav-submenu__link js_intercomToggle\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-support\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Help</div>
+    <small class=\"nav-submenu__link-desc\">Support and guidance</small>
+  </div>
+</span>
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item has-submenu \">
+      
+<span class=\"nav__link \" data-nav-target=\"submenuExpander\">
+  Company  <svg class=\"icon nav__link-chevron\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+  </svg>  
+</span>
+
+              <ul class=\"nav__submenu nav-submenu\">
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/security\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-shield\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Security</div>
+    <small class=\"nav-submenu__link-desc\">Guarding your digital assets</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/bug-bounty\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-bug\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Bug Bounty</div>
+    <small class=\"nav-submenu__link-desc\">Rewarding security research</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/affiliate-program\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-people\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Affiliate Program</div>
+    <small class=\"nav-submenu__link-desc\">Earn extra income</small>
+  </div>
+</a>
+
+          </li>
+                    <li class=\"nav-submenu__item \" >
+            
+<a class=\"nav-submenu__link\" href=\"/contacts\">
+  <svg class=\"icon nav-submenu__link-icon\" aria-hidden=\"true\">
+    <use xlink:href=\"/v2/icons/sprite.svg#icons-chat\"></use>
+  </svg>
+  <div class=\"nav-submenu__link-body\">
+    <div class=\"nav-submenu__link-title\">Contact us</div>
+    <small class=\"nav-submenu__link-desc\">Reach out for assistance</small>
+  </div>
+</a>
+
+          </li>
+                  </ul>
+          </li>
+      <li class=\"nav__item  \">
+      
+<a class=\"nav__link\" href=\"/pricing\">
+  Pricing</a>
+
+
+          </li>
+    </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+
+          <!-- access-->
+          <div class=\"header__user-container\">
+                          
+
+<div class=\"header__user-container\">
+  <div class=\"header-access\">
+    <a class=\"header-access__login-icon link\" href=\"/account/login\">
+      <svg class=\"icon\">
+        <use xlink:href=\"/v2/icons/sprite.svg#icons-user\"></use>
+      </svg>
+    </a>
+    <div class=\"header-access__buttons\">
+      <a class=\"header-access__login link text-accent-h5\" href=\"/account/login\">
+        Log in      </a>
+      <a class=\"btn--primary btn btn--md\" href=\"/account/signup\" data-header-target=\"signup\">
+        <div class=\"btn__label\">
+          Sign up        </div>
+      </a>
+    </div>
+  </div>
+</div>
+                      </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- main-->
+    <main class=\"main\">
+      
+<!-- Error 404-->
+<section class=\"section section--relaxed not-found\">
+    <div class=\"container\"><img class=\"not-found__image\" src=\"/v2/images/404.svg\" alt=\"Not found\" width=\"532\" height=\"230\">
+        <div class=\"not-found__title\">Oops, nothing here…</div>
+        <div class=\"not-found__desc\">Looks like you’ve lost. Use the navigation menu below to get out.</div>
+    </div>
+</section>
+    </main>
+
+    <!-- footer -->
+    <footer class=\"footer\">
+      <div class=\"container\">
+        <div class=\"footer__inner\">
+
+          <!-- top-->
+          <div class=\"footer__top\">
+            
+<!-- menus-->
+<div class=\"footer__menus\">
+
+  <!-- products menu-->
+  <div class=\"footer__menu footer-menu\">
+    <div class=\"footer-menu__title\">Products</div>
+    <ul class=\"footer-menu__list\">
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/\">
+          Business        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/personal\">
+          Personal        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/pricing\">
+          Pricing        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/mass-payouts\">
+          Mass Payouts        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/white-label\">
+          White Label        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/crypto-invoice\">
+          Invoices        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/donate-page\">
+          Donations        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/integrations\">
+          Integrations        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- resources menu-->
+  <div class=\"footer__menu footer-menu\">
+    <div class=\"footer-menu__title\">Resources</div>
+    <ul class=\"footer-menu__list\">
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/documentation\">
+          API        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/blog\">
+          Blog        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/security\">
+          Security        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/bug-bounty\">
+          Bug Bounty        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/affiliate-program\">
+          Affiliate Program        </a>
+      </li>      
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/faq\">
+          FAQ        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link \" href=\"/contacts\">
+          Contact us        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- policy menu-->
+  <div class=\"footer__menu footer-menu\">
+    <div class=\"footer-menu__title\">Policy</div>
+    <ul class=\"footer-menu__list\">
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link\" href=\"/docs/plisio-privacy-policy.pdf\" target=\"_blank\" rel=\"noopener\">
+          Privacy Policy        </a>
+      </li>
+      <li class=\"footer-menu__item\">
+        <a class=\"footer-menu__link\" href=\"/docs/plisio-terms-of-use.pdf\" target=\"_blank\" rel=\"noopener\">
+          Terms of Service        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- misc-->
+<div class=\"footer__misc\">
+
+  <!-- follow us-->
+  <div class=\"footer-follow\">
+    <div class=\"footer-follow__title\">Follow us</div>
+    <ul class=\"footer-follow__list\">
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://www.facebook.com/Plisio-345369956110151\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-facebook\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://twitter.com/Plisio_official\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-twitter\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://www.youtube.com/channel/UCC5QUVNUPTO631J_Z2XOBZw\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-youtube\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://github.com/Plisio\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-github\"></use>
+          </svg>
+        </a>
+      </li>
+      <li class=\"footer-follow__item\">
+        <a class=\"footer-follow__link\" href=\"https://medium.com/@plisio_official\" target=\"_blank\" rel=\"noopener noreferrer nofollow\" itemprop=\"sameAs\">
+          <svg class=\"icon\">
+            <use xlink:href=\"/v2/icons/sprite.svg#icons-social-medium\"></use>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  
+  <!-- language -->
+  <div class=\"footer__lang\">
+    <div class=\"lang-selector\" data-controller=\"dropdown\" data-dropdown-placement-value=\"top\">
+      <button class=\"lang-selector__trigger\" data-dropdown-target=\"trigger\" data-action=\"dropdown#toggle\">
+        <img class=\"lang-selector__trigger-flag\" src=\"/img/flags/en.png\" width=\"24\" height=\"24\" alt=\"en\" loading=\"lazy\">
+        <span class=\"lang-selector__trigger-text\">English</span>
+        <svg class=\"lang-selector__trigger-chevron icon\">
+          <use xlink:href=\"/v2/icons/sprite.svg#icons-arrow-down\"></use>
+        </svg>
+      </button>
+      <div class=\"lang-selector__dropdown dropdown hidden\" data-dropdown-target=\"dropdown\">
+        <ul class=\"dropdown__list\">
+                                                                    <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/en.png\" width=\"24\" height=\"24\" alt=\"en\" loading=\"lazy\">
+                    English                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ar\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ar.png\" width=\"24\" height=\"24\" alt=\"ar\" loading=\"lazy\">
+                    العربية                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=de\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/de.png\" width=\"24\" height=\"24\" alt=\"de\" loading=\"lazy\">
+                    Deutsch                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=el\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/el.png\" width=\"24\" height=\"24\" alt=\"el\" loading=\"lazy\">
+                    ελληνικά                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=es\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/es.png\" width=\"24\" height=\"24\" alt=\"es\" loading=\"lazy\">
+                    Español                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=fa\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/fa.png\" width=\"24\" height=\"24\" alt=\"fa\" loading=\"lazy\">
+                    فارسی                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=fr\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/fr.png\" width=\"24\" height=\"24\" alt=\"fr\" loading=\"lazy\">
+                    Français                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=hi\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/hi.png\" width=\"24\" height=\"24\" alt=\"hi\" loading=\"lazy\">
+                    हनद                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=id\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/id.png\" width=\"24\" height=\"24\" alt=\"id\" loading=\"lazy\">
+                    Bahasa Indonesia                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=it\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/it.png\" width=\"24\" height=\"24\" alt=\"it\" loading=\"lazy\">
+                    Italiano                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ja\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ja.png\" width=\"24\" height=\"24\" alt=\"ja\" loading=\"lazy\">
+                    日本語                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ko\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ko.png\" width=\"24\" height=\"24\" alt=\"ko\" loading=\"lazy\">
+                    한국어                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=pl\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/pl.png\" width=\"24\" height=\"24\" alt=\"pl\" loading=\"lazy\">
+                    Polski                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=pt\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/pt.png\" width=\"24\" height=\"24\" alt=\"pt\" loading=\"lazy\">
+                    Português                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=ru\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/ru.png\" width=\"24\" height=\"24\" alt=\"ru\" loading=\"lazy\">
+                    Русский                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=th\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/th.png\" width=\"24\" height=\"24\" alt=\"th\" loading=\"lazy\">
+                    ไทย                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=tr\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/tr.png\" width=\"24\" height=\"24\" alt=\"tr\" loading=\"lazy\">
+                    Türkçe                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=uk\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/uk.png\" width=\"24\" height=\"24\" alt=\"uk\" loading=\"lazy\">
+                    Українська                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=vi\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/vi.png\" width=\"24\" height=\"24\" alt=\"vi\" loading=\"lazy\">
+                    Tiếng Việt                  </a>
+                </li>
+                                                                        <li class=\"dropdown__item\">
+                  <a href=\"https://plisio.net/site/error?lang=zh\" class=\"lang-selector__dropdown-item-link dropdown__link link\">
+                    <img class=\"lang-selector__dropdown-item-flag\" src=\"/img/flags/zh.png\" width=\"24\" height=\"24\" alt=\"zh\" loading=\"lazy\">
+                    简体中文                  </a>
+                </li>
+                                            </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+
+          <!-- copyright-->
+          <div class=\"footer__copy\">
+            &copy; 2025 Plisio, Inc. All Rights Reserved.          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src=\"/v2/scripts/vendors.js?v=1741358504\"></script>
+<script src=\"/v2/scripts/app.js?v=1741358504\"></script>
+    
+</body>
+
+</html>
+"} 
+[2025-12-25 20:52:42] production.ERROR: Withdrawal gateway processing failed {"transaction_id":7244,"order_id":"UB_5_1766677962","error":"Withdrawal gateway is currently unavailable. Please try again later.","trace":"#0 /var/www/mlmtrial.live/app/Http/Controllers/WalletController.php(1152): App\\Services\\PaymentGatewayService->processWithdrawal()
+#1 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php(32): App\\Http\\Controllers\\WalletController->App\\Http\\Controllers\\{closure}()
+#2 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php(495): Illuminate\\Database\\Connection->transaction()
+#3 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\\Database\\DatabaseManager->__call()
+#4 /var/www/mlmtrial.live/app/Http/Controllers/WalletController.php(1093): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#5 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(47): App\\Http\\Controllers\\WalletController->processWithdraw()
+#6 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\\Routing\\ControllerDispatcher->dispatch()
+#7 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Route.php(212): Illuminate\\Routing\\Route->runController()
+#8 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Router.php(808): Illuminate\\Routing\\Route->run()
+#9 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()
+#10 /var/www/mlmtrial.live/app/Http/Middleware/VerificationRequired.php(68): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#11 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\\Http\\Middleware\\VerificationRequired->handle()
+#12 /var/www/mlmtrial.live/app/Http/Middleware/CheckPasswordChange.php(24): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#13 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\\Http\\Middleware\\CheckPasswordChange->handle()
+#14 /var/www/mlmtrial.live/app/Http/Middleware/TwoFactorAuthentication.php(17): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#15 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): App\\Http\\Middleware\\TwoFactorAuthentication->handle()
+#16 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(51): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#17 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()
+#18 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(64): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#19 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Auth\\Middleware\\Authenticate->handle()
+#20 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(88): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#21 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle()
+#22 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#23 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
+#24 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#25 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
+#26 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Session\\Middleware\\StartSession->handle()
+#27 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#28 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
+#29 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(75): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#30 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
+#31 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#32 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Router.php(807): Illuminate\\Pipeline\\Pipeline->then()
+#33 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Router.php(786): Illuminate\\Routing\\Router->runRouteWithinStack()
+#34 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Router.php(750): Illuminate\\Routing\\Router->runRoute()
+#35 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Routing/Router.php(739): Illuminate\\Routing\\Router->dispatchToRoute()
+#36 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(201): Illuminate\\Routing\\Router->dispatch()
+#37 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(170): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
+#38 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#39 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#40 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
+#41 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#42 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#43 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
+#44 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#45 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Http\\Middleware\\ValidatePostSize->handle()
+#46 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(110): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#47 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
+#48 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#49 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Http\\Middleware\\HandleCors->handle()
+#50 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#51 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Http\\Middleware\\TrustProxies->handle()
+#52 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#53 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(209): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle()
+#54 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(127): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#55 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(176): Illuminate\\Pipeline\\Pipeline->then()
+#56 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#57 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1220): Illuminate\\Foundation\\Http\\Kernel->handle()
+#58 /var/www/mlmtrial.live/public/index.php(17): Illuminate\\Foundation\\Application->handleRequest()
+#59 {main}"} 
+[2025-12-25 20:52:42] production.INFO: Amount refunded due to gateway failure {"transaction_id":7244,"order_id":"UB_5_1766677962","refunded_amount":"30","balance_after_refund":"743.95260000"} 
+[2025-12-25 20:52:42] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:52:42] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:52:42] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:52:43] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:52:43] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:52:43] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:52:43] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:52:43] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:52:43] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:53:01] production.DEBUG: Decrypted setting: mail_username  
+[2025-12-25 20:53:01] production.DEBUG: Decrypted setting: mail_password  
+[2025-12-25 20:53:01] production.INFO: Database mail configuration applied {"host":"mail.predictionbot.net","port":587,"from":"noreply@predictionbot.net","username":"noreply","password_set":true} 
+[2025-12-25 20:53:01] production.ERROR: Class "DOMDocument" not found {"exception":"[object] (Error(code: 0): Class \"DOMDocument\" not found at /var/www/mlmtrial.live/vendor/nunomaduro/termwind/src/HtmlRenderer.php:32)
+[stacktrace]
+#0 /var/www/mlmtrial.live/vendor/nunomaduro/termwind/src/HtmlRenderer.php(24): Termwind\\HtmlRenderer->parse()
+#1 /var/www/mlmtrial.live/vendor/nunomaduro/termwind/src/Functions.php(41): Termwind\\HtmlRenderer->render()
+#2 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/View/Components/Component.php(52): Termwind\\render()
+#3 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/View/Components/BulletList.php(24): Illuminate\\Console\\View\\Components\\Component->renderView()
+#4 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/View/Components/Factory.php(60): Illuminate\\Console\\View\\Components\\BulletList->render()
+#5 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(212): Illuminate\\Console\\View\\Components\\Factory->__call()
+#6 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(159): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->runEvent()
+#7 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(131): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->runSingleServerEvent()
+#8 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->handle()
+#9 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#10 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call()
+#13 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
+#14 /var/www/mlmtrial.live/vendor/symfony/console/Command/Command.php(318): Illuminate\\Console\\Command->execute()
+#15 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /var/www/mlmtrial.live/vendor/symfony/console/Application.php(1110): Illuminate\\Console\\Command->run()
+#17 /var/www/mlmtrial.live/vendor/symfony/console/Application.php(359): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /var/www/mlmtrial.live/vendor/symfony/console/Application.php(194): Symfony\\Component\\Console\\Application->doRun()
+#19 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run()
+#20 /var/www/mlmtrial.live/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate\\Foundation\\Console\\Kernel->handle()
+#21 /var/www/mlmtrial.live/artisan(13): Illuminate\\Foundation\\Application->handleCommand()
+#22 {main}
+"} 
