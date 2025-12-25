@@ -26,3 +26,36 @@ MAIL_MAILER = "log"
 MAIL_FROM_ADDRESS = "hello@example.com"
 MAIL_FROM_NAME = "Laravel"
 APP_KEY = "base64:J83cZ11DyNpG5ihes56yTzirEgKBUt7wO6NFNgIuu6Q="
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Laravel App"
+
+[[workflows.workflow]]
+name = "Laravel App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "php artisan serve --host=0.0.0.0 --port=5000"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["php", "artisan", "serve", "--host=0.0.0.0", "--port=5000"]
+build = ["npm", "run", "build"]
