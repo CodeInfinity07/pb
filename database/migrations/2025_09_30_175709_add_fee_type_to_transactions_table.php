@@ -10,9 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // First, check for any invalid type values and log them
         $invalidTransactions = DB::table('transactions')
-            ->whereNotIn('type', ['deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus'])
+            ->whereNotIn('type', ['deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'profit', 'adjust'])
             ->get();
         if ($invalidTransactions->isNotEmpty()) {
             \Log::warning('Found transactions with invalid type values:', [
@@ -20,15 +19,18 @@ return new class extends Migration {
                 'transactions' => $invalidTransactions->pluck('id', 'type')->toArray()
             ]);
 
-            // Update invalid types to a default value (e.g., 'deposit')
-            // Or you can choose another appropriate default
             DB::table('transactions')
-                ->whereNotIn('type', ['deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus'])
+                ->whereNotIn('type', ['deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'profit', 'adjust'])
                 ->update(['type' => 'deposit']);
         }
 
-        // Now modify the enum to add 'fee'
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'fee') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'fee', 'profit', 'adjust') NOT NULL");
+        } elseif (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE transactions DROP CONSTRAINT IF EXISTS transactions_type_check");
+            DB::statement("ALTER TABLE transactions ALTER COLUMN type TYPE varchar(255)");
+            DB::statement("ALTER TABLE transactions ADD CONSTRAINT transactions_type_check CHECK (type IN ('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'fee', 'profit', 'adjust'))");
+        }
     }
 
     /**
@@ -36,12 +38,15 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        // Before removing 'fee', update any transactions with type 'fee' to something else
         DB::table('transactions')
             ->where('type', 'fee')
             ->update(['type' => 'deposit']);
 
-        // Remove 'fee' type
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'profit', 'adjust') NOT NULL");
+        } elseif (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE transactions DROP CONSTRAINT IF EXISTS transactions_type_check");
+            DB::statement("ALTER TABLE transactions ADD CONSTRAINT transactions_type_check CHECK (type IN ('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'profit', 'adjust'))");
+        }
     }
 };

@@ -12,8 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Modify the enum column to add 'adjust' type
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'adjust') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'adjust') NOT NULL");
+        } elseif (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE transactions DROP CONSTRAINT IF EXISTS transactions_type_check");
+            DB::statement("ALTER TABLE transactions ALTER COLUMN type TYPE varchar(255)");
+            DB::statement("ALTER TABLE transactions ADD CONSTRAINT transactions_type_check CHECK (type IN ('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus', 'adjust'))");
+        }
     }
 
     /**
@@ -21,7 +26,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Remove 'adjust' from the enum column
-        DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE transactions MODIFY COLUMN type ENUM('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus') NOT NULL");
+        } elseif (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE transactions DROP CONSTRAINT IF EXISTS transactions_type_check");
+            DB::statement("ALTER TABLE transactions ADD CONSTRAINT transactions_type_check CHECK (type IN ('deposit', 'withdrawal', 'commission', 'roi', 'investment', 'bonus'))");
+        }
     }
 };
