@@ -26,6 +26,7 @@ MAIL_MAILER = "log"
 MAIL_FROM_ADDRESS = "hello@example.com"
 MAIL_FROM_NAME = "Laravel"
 APP_KEY = "base64:J83cZ11DyNpG5ihes56yTzirEgKBUt7wO6NFNgIuu6Q="
+PLISIO_CALLBACK_URL = "https://270f1e55-4996-4fdc-b4c0-5b6599751b9b-00-2zwngoatgxr2w.pike.replit.dev/api/webhooks/plisio"
 
 [workflows]
 runButton = "Project"
