@@ -259,6 +259,64 @@
                                     </div>
                                 </div>
 
+                                @elseif(isset($paymentData['invoice_url']))
+                                {{-- Plisio Redirect Payment --}}
+                                <div id="paymentSection">
+                                    <div class="text-center">
+                                        <div class="mb-4">
+                                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                                                 style="width: 80px; height: 80px;">
+                                                <iconify-icon icon="iconamoon:link-external-duotone" style="font-size: 2.5rem;"></iconify-icon>
+                                            </div>
+                                            <h4 class="text-primary mb-2">Complete Your Payment</h4>
+                                            <p class="text-muted mb-4">Click the button below to complete your payment securely through our payment processor.</p>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-3 mb-4" style="max-width: 400px; margin: 0 auto;">
+                                            <a href="{{ $paymentData['invoice_url'] }}" 
+                                               target="_blank" 
+                                               class="btn btn-success btn-lg">
+                                                <iconify-icon icon="iconamoon:arrow-top-right-duotone" class="me-2"></iconify-icon>
+                                                Pay Now - ${{ number_format($requestedAmount, 2) }}
+                                            </a>
+                                            <a href="{{ $paymentData['invoice_url'] }}" 
+                                               target="_blank" 
+                                               class="btn btn-outline-secondary">
+                                                Open in New Tab
+                                            </a>
+                                        </div>
+
+                                        <div class="alert alert-warning">
+                                            <h6 class="alert-heading mb-2">Payment Instructions</h6>
+                                            <ol class="text-start mb-0 small">
+                                                <li>Click "Pay Now" to open the secure payment page</li>
+                                                <li>Select your preferred cryptocurrency</li>
+                                                <li>Send the exact amount shown to the provided address</li>
+                                                <li>Wait for blockchain confirmations (1-30 minutes)</li>
+                                                <li>Your wallet will be credited automatically</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Success State (Hidden Initially) --}}
+                                <div id="successSection" class="d-none">
+                                    <div class="text-center">
+                                        <div class="mb-4">
+                                            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                                                 style="width: 80px; height: 80px;">
+                                                <iconify-icon icon="iconamoon:check-duotone" style="font-size: 2.5rem;"></iconify-icon>
+                                            </div>
+                                            <h4 class="text-success mb-2">Payment Confirmed!</h4>
+                                            <p class="text-muted mb-3">Your deposit has been processed successfully.</p>
+                                            <div class="alert alert-success">
+                                                <strong>+${{ number_format($requestedAmount, 2) }}</strong>
+                                                <br><small>Added to your {{ $selectedWallet->currency }} wallet</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 @elseif(isset($paymentData['form']))
                                 {{-- External Payment Form --}}
                                 <div class="alert alert-info text-center">
